@@ -5,13 +5,7 @@ require 'rest_client'
 module Heroku::Command
   class Zenslap < Base
     def add
-      puts "ah yeah!"
-      %{
-        get github repo
-        send post to zenslap
-      }
-      
-      RestClient.post "http://zenslap.heroku.com/heroku/resources", :github_url => github_url.tap{ |url| puts "Setting up #{url}" }
+      RestClient.post "http://zenslap.heroku.com/heroku/resources", :github_url => github_url
     end
     
     private
