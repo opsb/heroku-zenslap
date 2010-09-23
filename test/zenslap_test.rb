@@ -5,7 +5,8 @@ class ZenslapTest < Test::Unit::TestCase
     setup do
       @command = Heroku::Command::Zenslap.new nil
     end
-    should "show branches" do
+    should "provision continuous integration through zenslap API" do
+      @command.expects(:github_url).returns("git@github.com:opsb/zenslap-heroku")
       @command.add
     end
   end
