@@ -22,12 +22,16 @@ class Repository
   end
   
   def add(service_hook)
-    RestClient.post(
-      "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
-      "urls" => service_hooks + [service_hook], 
-      :login => CONFIG['GITHUB_LOGIN'],
-      :token => CONFIG['GITHUB_TOKEN']
-    })
+    begin
+      RestClient.post(
+        "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
+        "urls" => service_hooks + [service_hook], 
+        :login => CONFIG['GITHUB_LOGIN'],
+        :token => CONFIG['GITHUB_TOKEN']
+      })
+    rescue Exception => e
+      raise e unless e.response.net_http_res.code == '302'
+    end
   end
   
 end

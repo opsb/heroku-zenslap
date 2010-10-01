@@ -25,7 +25,8 @@ class RepositoryTest < Test::Unit::TestCase
                       "urls" => ["http://pivotaltracker.com", "http://bugtracker.com"], 
                       "login" => USERNAME,
                       "token" => TOKEN
-                    })
+                    }).
+                    to_return( :status => 302 )
             
       @repository.add "http://bugtracker.com"
       
