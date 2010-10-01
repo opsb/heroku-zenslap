@@ -5,8 +5,14 @@ require 'rest_client'
 module Heroku::Command
   class Zenslap < Base
     def add
+      puts "---> Adding zenslap"
+      puts "---> Creating test environment"
       RestClient.post "http://zenslap.heroku.com/heroku/resources", :github_url => github_url
+      puts "---> Test environment created"
+      puts "---> Adding github service hook"
       Repository.new(github_url).add("http://zenslap.heroku.com/pushes")
+      puts "---> Added service hook"
+      puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."
     end
     
     private
