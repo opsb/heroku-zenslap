@@ -6,6 +6,7 @@ module Heroku::Command
   class Zenslap < Base
     def add
       RestClient.post "http://zenslap.heroku.com/heroku/resources", :github_url => github_url
+      Repository.new(github_url).add("http://zenslap.heroku.com/pushes")
     end
     
     private
