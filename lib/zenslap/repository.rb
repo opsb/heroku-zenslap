@@ -3,13 +3,12 @@ require 'httparty'
 class Repository
   include HTTParty
   
-  def initialize(url, auth)
+  def initialize(url)
     @url = url
-    @auth = auth
   end
   
   def service_hooks
-    html = Repository.get("http://github.com/opsb/zenslap/edit?login=#{@auth[:login]}&token=#{@auth[:token]}")
+    html = Repository.get("http://github.com/opsb/zenslap/edit?login=#{CONFIG['GITHUB_LOGIN']}&token=#{CONFIG['GITHUB_TOKEN']}")
     doc = Nokogiri::HTML(html)
     (doc/"input[name='urls[]']/@value").to_a.map{ |value| value.to_s }
   end

@@ -11,9 +11,7 @@ class RepositoryTest < Test::Unit::TestCase
                     to_return(:body => GITHUB_SERVICE_HOOKS_PAGE)
                     
       stub_request(:post, "http://github.com/opsb/zenslap/edit?login=#{USERNAME}&token=#{TOKEN}")
-      @repository = Repository.new "git@github.com:opsb/zenslap", 
-                                   :login => USERNAME, 
-                                   :token => TOKEN
+      @repository = Repository.new "git@github.com:opsb/zenslap"
     end
     
     should "have service hooks" do
