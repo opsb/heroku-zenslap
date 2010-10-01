@@ -4,32 +4,30 @@ class Repository
   include HTTParty
   
   def initialize(url)
-    @url = url
+    @username, @repository = /git@github.com:(\w+)\/(\w+)/.match(url)[1..2]
   end
   
   def service_hooks
-    html = Repository.get("http://github.com/opsb/zenslap/edit?login=#{CONFIG['GITHUB_LOGIN']}&token=#{CONFIG['GITHUB_TOKEN']}")
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri::HTML(
+      Repository.get(
+        "http://github.com/%s/%s/edit?login=%s&token=%s" % [
+          @username,
+          @repository,
+          CONFIG['GITHUB_LOGIN'],
+          CONFIG['GITHUB_TOKEN']
+        ]
+      )
+    )
     (doc/"input[name='urls[]']/@value").to_a.map{ |value| value.to_s }
   end
   
   def add(service_hook)
-    RestClient.post("https://github.com/opsb/zenslap/edit/postreceive_urls", {
+    RestClient.post(
+      "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
       "urls" => service_hooks + [service_hook], 
       :login => CONFIG['GITHUB_LOGIN'],
       :token => CONFIG['GITHUB_TOKEN']
     })
-  end
-  
-  private
-  GITHUB_URL_REGEX = /git@github.com:(\w+)\/(\w+)/
-  
-  def username
-    @url[GITHUB_URL_REGEX, 1]
-  end
-  
-  def name
-    @url[GITHUB_URL_REGEX, 2]    
   end
   
 end
