@@ -3,8 +3,8 @@ require 'test_helper'
 class RepositoryTest < Test::Unit::TestCase
   context "a repository" do
     
-    USERNAME = "opsb"
-    TOKEN = "123"
+    USERNAME = CONFIG["GITHUB_LOGIN"]
+    TOKEN = CONFIG["GITHUB_TOKEN"]
     
     setup do
       stub_request(:get, "http://github.com/opsb/zenslap/edit?login=#{USERNAME}&token=#{TOKEN}").
@@ -19,6 +19,20 @@ class RepositoryTest < Test::Unit::TestCase
     
     should "have service hooks" do
       assert_equal @repository.service_hooks, ["http://pivotaltracker.com", "http://fogbugz.com"]
+    end
+    
+    should "add service hooks" do
+      @repository.expects(:service_hooks).returns ["http://pivotaltracker.com"]
+      stub_request(:post, "https://github.com/opsb/zenslap/edit/postreceive_urls").
+                    with(:body => {
+                      "urls" => ["http://pivotaltracker.com", "http://bugtracker.com"], 
+                      "login" => USERNAME,
+                      "token" => TOKEN
+                    })
+            
+      @repository.add "http://bugtracker.com"
+      
+      assert_requested(:post, "https://github.com/opsb/zenslap/edit/postreceive_urls")
     end
   end
   
