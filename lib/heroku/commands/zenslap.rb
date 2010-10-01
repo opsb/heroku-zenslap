@@ -1,6 +1,9 @@
 require 'heroku/command'
 require 'git'
+require 'nokogiri'
 require 'rest_client'
+require 'zenslap/repository.rb'
+require 'config.rb'
 
 module Heroku::Command
   class Zenslap < Base
