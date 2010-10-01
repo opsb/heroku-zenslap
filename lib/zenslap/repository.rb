@@ -18,7 +18,7 @@ class Repository
         ]
       )
     )
-    (doc/"input[name='urls[]']/@value").to_a.map{ |value| value.to_s }
+    (doc/"input[name='urls[]']/@value").to_a.map &:to_s
   end
   
   def add(service_hook)
