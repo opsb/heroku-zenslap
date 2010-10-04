@@ -53,7 +53,7 @@ class ZenslapTest < Test::Unit::TestCase
 
       should "configured zenslap repository with github_url" do
         assert_received RestClient, :put, &with( 
-          "http://zenslap.heroku.com/repositories/#{ZENSLAP_ID}", 
+          "http://zenslap.heroku.com/heroku/resources/#{ZENSLAP_ID}", 
           {:repository => { :github_url => GITHUB_URL }} 
         )
       end

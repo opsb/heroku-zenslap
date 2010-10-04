@@ -15,7 +15,7 @@ module Heroku::Command
       heroku_client.install_addon heroku_app_name, "zenslap"
       
       puts "---> Configuring for #{github_url}"
-      RestClient.put "http://zenslap.heroku.com/repositories/#{zenslap_id}", :repository => { :github_url => github_url }
+      RestClient.put "http://zenslap.heroku.com/heroku/resources/#{zenslap_id}", :repository => { :github_url => github_url }
       
       puts "---> Adding service to github"
       Repository.new(github_url).add("http://zenslap.heroku.com/pushes")      
