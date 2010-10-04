@@ -32,13 +32,23 @@ class ZenslapTest < Test::Unit::TestCase
     should "retrieve ZENSLAP_ID" do
       assert_equal ZENSLAP_ID, @command.zenslap_id
     end
+    
+    should "retrieve heroku test url" do
+      response = RestClient.get "http://zenslap.heroku.com/repositories/3"
+      assert_equal JSON.parse(reponse.body)["heroku"]
+    end
 
 
     context "after adding zenslap service" do
       CALLBACK_URL = "http://zenslap.heroku.com/pushes"
+      HEROKU_TEST_URL = "git@heroku.com:warm-sky-56.git"
       
       setup do     
         @repo_mock = stub(:add => CALLBACK_URL)
+        @git_repo = stub(:add_remote)
+        
+        Git.stubs(:open).returns(@git_repo)
+        @command.stubs(:heroku_test_url).returns(HEROKU_TEST_URL)
         
         Repository.stubs( :new ).returns( @repo_mock )
         RestClient.stubs(:put)
@@ -60,6 +70,12 @@ class ZenslapTest < Test::Unit::TestCase
 
       should "add service hook to github" do
         assert_received @repo_mock, :add, &with(CALLBACK_URL)
+      end
+      
+      should "add heroku test app to git config" do
+        assert_received @git_repo, :add_remote do |expect|
+          expect.with("test", HEROKU_TEST_URL)
+        end
       end
     end
   end

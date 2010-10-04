@@ -18,7 +18,10 @@ module Heroku::Command
       RestClient.put "http://zenslap.heroku.com/heroku/resources/#{zenslap_id}", :repository => { :github_url => github_url }
       
       puts "---> Adding service hooks to github"
-      Repository.new(github_url).add("http://zenslap.heroku.com/pushes")      
+      Repository.new(github_url).add("http://zenslap.heroku.com/pushes")
+      
+      puts "---> Adding test remote to local git config"
+      git_repo.add_remote "test", heroku_test_url
 
       puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."
     end
@@ -41,6 +44,10 @@ module Heroku::Command
     
     def zenslap_id
       heroku_client.config_vars(heroku_app_name)["ZENSLAP_ID"]
+    end
+    
+    def heroku_test_url
+      
     end
     
     private
