@@ -8,10 +8,10 @@ require 'config.rb'
 
 module Heroku::Command
   class Zenslap < Base
-    HEROKU_GIT_REGEX = /git@heroku.com:(.*)/
+    HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/
     
     def add
-      puts "---> Adding zenslap addon"
+      puts "---> Adding zenslap addon to #{heroku_app_name}"
       heroku_client.install_addon heroku_app_name, "zenslap"
       
       puts "---> Configuring for #{github_url}"
