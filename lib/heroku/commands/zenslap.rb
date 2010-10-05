@@ -15,7 +15,6 @@ module Heroku::Command
       if plugin_available?
         provision_plugin
       else
-        puts "showing introduction"
         show_introduction
       end
     end
