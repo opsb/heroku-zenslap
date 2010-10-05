@@ -10,7 +10,13 @@ end
 
 desc "install from github"
 task "install" do
-  REPO = "git@github.com:opsb/zenslap-heroku"
+  REPO = "git@github.com:opsb/heroku-zenslap"
   puts "Installing plugin from #{REPO}"
   puts `heroku plugins:install #{REPO}`
+end
+
+desc "publish from github to herocutter"
+task "publish" do
+  REPO = "git://github.com/opsb/heroku-zenslap"  
+  `heroku plugins:push #{REPO}`
 end
