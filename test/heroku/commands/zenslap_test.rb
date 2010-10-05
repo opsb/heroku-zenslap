@@ -5,7 +5,7 @@ class ZenslapTest < Test::Unit::TestCase
 
   should "detect plugin is available" do
     @command = Heroku::Command::Zenslap.new nil
-    Heroku::Client.any_instance.stubs(:addons).returns([{"name" => "zenslap"}])    
+    Heroku::Client.any_instance.stubs(:addons).returns([{"name" => "zenslap:test"}])    
     assert @command.plugin_available?
   end
 

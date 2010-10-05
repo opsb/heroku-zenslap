@@ -20,7 +20,9 @@ module Heroku::Command
     end
 
     def plugin_available?
-      heroku_client.addons.map{ |addon| addon["name"] }.include? "zenslap:test"      
+      heroku_client.addons.map{ |addon| addon["name"] }.find do |name| 
+        name =~ /zenslap.*/
+      end
     end    
 
     def show_introduction
