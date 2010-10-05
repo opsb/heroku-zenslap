@@ -45,6 +45,13 @@ class ZenslapTest < Test::Unit::TestCase
     should "retrieve ZENSLAP_ID" do
       assert_equal ZENSLAP_ID, @command.zenslap_id
     end
+    
+    should "retrieve heroku test url" do
+      WebMock.allow_net_connect!
+      response = RestClient.get "http://zenslap.heroku.com/heroku/resources/4.json"
+      WebMock.disable_net_connect!
+      assert_equal JSON.parse(response.body)["heroku_url"], "git@heroku.com:strong-rain-37.git"
+    end
 
     context "after adding zenslap service" do
       CALLBACK_URL = "http://zenslap.heroku.com/pushes"
