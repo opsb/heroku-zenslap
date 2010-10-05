@@ -15,6 +15,17 @@ class ZenslapTest < Test::Unit::TestCase
     assert !@command.plugin_available?
   end
 
+  should "have heroku test url" do
+    @command = Heroku::Command::Zenslap.new nil
+    @command.stubs(:zenslap_id).returns(3)
+
+    heroku_test_url = "git@github.com:test_repo"
+    RestClient.expects(:get).with("http://zenslap.heroku.com/heroku/resources/3.json").
+                             returns(stub(:body => { "heroku_url" => heroku_test_url}.to_json))
+
+    assert_equal @command.heroku_test_url, heroku_test_url 
+  end
+
   context "zenslap command" do
     GITHUB_URL = "git@github.com:opsb/conference_hub"
     HEROKU_URL = "git@heroku.com:conference_hub.git"
@@ -46,13 +57,6 @@ class ZenslapTest < Test::Unit::TestCase
       assert_equal ZENSLAP_ID, @command.zenslap_id
     end
     
-    should "retrieve heroku test url" do
-      WebMock.allow_net_connect!
-      response = RestClient.get "http://zenslap.heroku.com/heroku/resources/4.json"
-      WebMock.disable_net_connect!
-      assert_equal JSON.parse(response.body)["heroku_url"], "git@heroku.com:strong-rain-37.git"
-    end
-
     context "after adding zenslap service" do
       CALLBACK_URL = "http://zenslap.heroku.com/pushes"
       HEROKU_TEST_URL = "git@heroku.com:warm-sky-56.git"
