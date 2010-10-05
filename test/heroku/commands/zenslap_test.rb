@@ -9,6 +9,14 @@ class ZenslapTest < Test::Unit::TestCase
     assert @command.plugin_available?
   end
 
+  should "detect when heroku credentials are missing" do
+    @command = Heroku::Command::Zenslap.new nil
+    Heroku::Client.stubs(:new).raises(RestClient::Unauthorized.new)
+    WebMock.allow_net_connect!
+    assert !@command.plugin_available?
+    
+  end
+
   should "detect plugin is not available" do
     @command = Heroku::Command::Zenslap.new nil
     Heroku::Client.any_instance.stubs(:addons).returns([{"name" => "memcached"}])    
