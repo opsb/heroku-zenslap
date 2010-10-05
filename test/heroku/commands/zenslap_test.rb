@@ -27,6 +27,7 @@ class ZenslapTest < Test::Unit::TestCase
       Heroku::Client.stubs(:new).returns(@heroku_client)
       @heroku_client.stubs(:config_vars).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
       @command.stubs(:git_urls).returns([GITHUB_URL, HEROKU_URL])
+      @command.stubs(:credentials).returns(["jim@bo.com", "password"])
     end
 
     should "find github url" do

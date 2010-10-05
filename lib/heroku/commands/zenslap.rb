@@ -20,8 +20,7 @@ module Heroku::Command
     end
 
     def plugin_available?
-      client = Heroku::Client.new ENV['GITHUB_LOGIN'], ENV['GITHUB_TOKEN']
-      client.addons.map{ |addon| addon["name"] }.include? "zenslap"      
+      heroku_client.addons.map{ |addon| addon["name"] }.include? "zenslap"      
     end    
 
     def show_introduction
@@ -70,8 +69,11 @@ module Heroku::Command
     end
 
     def heroku_client
-      Heroku::Client.new ENV["ZENSLAP_HEROKU_EMAIL"], ENV["ZENSLAP_HEROKU_PASSWORD"]
+      Heroku::Client.new *credentials
     end
 
+    def credentials
+      Heroku::Command::Auth.new(nil).get_credentials
+    end
   end
 end
