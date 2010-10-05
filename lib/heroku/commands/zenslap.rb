@@ -8,6 +8,26 @@ require 'config.rb'
 module Heroku::Command
   class Zenslap < Base
     def add
+      puts "---> Checking availability"
+      if plugin_available?
+        provision_plugin
+      else
+        puts "showing introduction"
+        show_introduction
+      end
+    end
+    
+    def show_introduction
+      puts "zenslap is the easiest way to add continuous integration to your heroku app. We're currently in alpha. You can go ahead and request an invitation@zenslap.me."
+    end
+
+    def plugin_available?
+      client = Heroku::Client.new ENV['GITHUB_LOGIN'], ENV['GITHUB_TOKEN']
+      client.addons.map{ |addon| addon["name"] }.include? "zenslap"      
+    end    
+    
+    private
+    def provision_plugin
       puts "---> Adding zenslap"
       puts "---> Creating test environment"
       RestClient.post "http://zenslap.heroku.com/heroku/resources", :github_url => github_url
@@ -15,10 +35,9 @@ module Heroku::Command
       puts "---> Adding github service hook"
       Repository.new(github_url).add("http://zenslap.heroku.com/pushes")
       puts "---> Added service hook"
-      puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."
+      puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."      
     end
     
-    private
     def github_url
       git_urls.find{ |url| url =~ /git@github.com:.*/} || (raise "No github address found")
     end
