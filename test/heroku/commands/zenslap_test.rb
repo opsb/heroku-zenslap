@@ -14,7 +14,6 @@ class ZenslapTest < Test::Unit::TestCase
     Heroku::Client.stubs(:new).raises(RestClient::Unauthorized.new)
     WebMock.allow_net_connect!
     assert !@command.plugin_available?
-    
   end
 
   should "detect plugin is not available" do
