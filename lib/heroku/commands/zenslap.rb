@@ -20,12 +20,8 @@ module Heroku::Command
     end
 
     def plugin_available?
-      begin
-        client = Heroku::Client.new ENV['GITHUB_LOGIN'], ENV['GITHUB_TOKEN']
-        client.addons.map{ |addon| addon["name"] }.include? "zenslap"      
-      rescue Exception => e
-        false
-      end
+      client = Heroku::Client.new ENV['GITHUB_LOGIN'], ENV['GITHUB_TOKEN']
+      client.addons.map{ |addon| addon["name"] }.include? "zenslap"      
     end    
 
     def show_introduction
