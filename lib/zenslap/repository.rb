@@ -1,5 +1,4 @@
 require 'httparty'
-require 'octopussy'
 
 class Repository
   include HTTParty
