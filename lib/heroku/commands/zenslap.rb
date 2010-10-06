@@ -37,7 +37,11 @@ module Heroku::Command
       RestClient.put "http://zenslap.me/heroku/resources/#{zenslap_id}", :repository => { :github_url => github_url }
 
       puts "---> Adding service hooks to github"
-      Repository.new(github_url).add("http://zenslap.me/pushes")
+      repo = Repository.new(github_url)
+      repo.add("http://zenslap.me/pushes")
+
+      puts "---> Adding deploy key to github"
+      repo.add_deploy_key
 
       puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."
     end    

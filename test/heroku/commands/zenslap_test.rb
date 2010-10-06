@@ -62,7 +62,7 @@ class ZenslapTest < Test::Unit::TestCase
       HEROKU_TEST_URL = "git@heroku.com:warm-sky-56.git"
 
       setup do     
-        @repo_mock = stub(:add => CALLBACK_URL)
+        @repo_mock = stub(:add => CALLBACK_URL, :add_deploy_key => nil)
         @git_repo = stub(:add_remote)
 
         Git.stubs(:open).returns(@git_repo)
@@ -112,6 +112,9 @@ class ZenslapTest < Test::Unit::TestCase
             #expect.with("test", HEROKU_TEST_URL)
           #end
         #end  
+        should "add deploy key" do
+          assert_received @repo_mock, :add_deploy_key
+        end
       end
 
     end

@@ -1,4 +1,5 @@
 require 'httparty'
+require 'octopussy'
 
 class Repository
   include HTTParty
@@ -23,15 +24,24 @@ class Repository
   
   def add(service_hook)
     begin
-      RestClient.post(
-        "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
+      params = ["https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
         "urls" => service_hooks + [service_hook], 
-        :login => CONFIG['GITHUB_LOGIN'],
-        :token => CONFIG['GITHUB_TOKEN']
-      })
-    rescue Exception => e
-      raise e unless e.response.net_http_res.code == '302'
+        "login" => CONFIG['GITHUB_LOGIN'],
+        "token" => CONFIG['GITHUB_TOKEN']
+      }]
+      puts params.inspect
+      RestClient.post(*params)
+    rescue RestClient::Exception => e
+      e.response.net_http_res.code == '302'
     end
+  end
+  
+  def add_zenslap_collaborator
+    github_client.add_collaborator "#{@username}/#{@repository}", "zenslap"
+  end
+
+  def github_client
+    Octopussy::Client.new(:login => CONFIG[ 'GITHUB_LOGIN' ], :token => CONFIG['GITHUB_TOKEN'])
   end
   
 end
