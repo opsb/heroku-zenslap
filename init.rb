@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require File.dirname(__FILE__) + '/lib/heroku/commands/zenslap'
 
 Heroku::Command::Help.group('zenslap') do |group|
