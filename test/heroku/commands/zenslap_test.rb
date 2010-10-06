@@ -107,11 +107,11 @@ class ZenslapTest < Test::Unit::TestCase
           assert_received @repo_mock, :add, &with(CALLBACK_URL)
         end
 
-        should "add heroku test app to git config" do
-          assert_received @git_repo, :add_remote do |expect|
-            expect.with("test", HEROKU_TEST_URL)
-          end
-        end  
+        #should "add heroku test app to git config" do
+          #assert_received @git_repo, :add_remote do |expect|
+            #expect.with("test", HEROKU_TEST_URL)
+          #end
+        #end  
       end
 
     end
