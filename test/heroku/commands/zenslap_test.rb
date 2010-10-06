@@ -20,7 +20,7 @@ class ZenslapTest < Test::Unit::TestCase
     @command.stubs(:zenslap_id).returns(3)
 
     heroku_test_url = "git@github.com:test_repo"
-    RestClient.expects(:get).with("http://zenslap.heroku.com/heroku/resources/3.json").
+    RestClient.expects(:get).with("http://zenslap.me/heroku/resources/3.json").
                              returns(stub(:body => { "heroku_url" => heroku_test_url}.to_json))
 
     assert_equal @command.heroku_test_url, heroku_test_url 
@@ -58,7 +58,7 @@ class ZenslapTest < Test::Unit::TestCase
     end
     
     context "after adding zenslap service" do
-      CALLBACK_URL = "http://zenslap.heroku.com/pushes"
+      CALLBACK_URL = "http://zenslap.me/pushes"
       HEROKU_TEST_URL = "git@heroku.com:warm-sky-56.git"
 
       setup do     
@@ -98,7 +98,7 @@ class ZenslapTest < Test::Unit::TestCase
 
         should "configured zenslap repository with github_url" do
           assert_received RestClient, :put, &with( 
-          "http://zenslap.heroku.com/heroku/resources/#{ZENSLAP_ID}", 
+          "http://zenslap.me/heroku/resources/#{ZENSLAP_ID}", 
           {:repository => { :github_url => GITHUB_URL }} 
           )
         end

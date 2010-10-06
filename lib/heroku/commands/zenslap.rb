@@ -34,10 +34,10 @@ module Heroku::Command
       heroku_client.install_addon heroku_app_name, "zenslap"
 
       puts "---> Configuring for #{github_url}"
-      RestClient.put "http://zenslap.heroku.com/heroku/resources/#{zenslap_id}", :repository => { :github_url => github_url }
+      RestClient.put "http://zenslap.me/heroku/resources/#{zenslap_id}", :repository => { :github_url => github_url }
 
       puts "---> Adding service hooks to github"
-      Repository.new(github_url).add("http://zenslap.heroku.com/pushes")
+      Repository.new(github_url).add("http://zenslap.me/pushes")
 
       puts "---> Adding test remote to local git config"
       git_repo.add_remote "test", heroku_test_url
@@ -46,7 +46,7 @@ module Heroku::Command
     end    
 
     def heroku_test_url
-      response = RestClient.get "http://zenslap.heroku.com/heroku/resources/#{zenslap_id}.json"
+      response = RestClient.get "http://zenslap.me/heroku/resources/#{zenslap_id}.json"
       JSON.parse( response.body )["heroku_url"]    
     end
 
