@@ -15,6 +15,7 @@ end
 require 'lib/config.rb'
 require 'lib/heroku/commands/zenslap.rb'
 require 'lib/zenslap/repository.rb'
+require 'lib/zenslap/app.rb'
 
 def with(*args)
   Proc.new do |expect|

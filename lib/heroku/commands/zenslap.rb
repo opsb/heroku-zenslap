@@ -4,6 +4,7 @@ require 'git'
 require 'nokogiri'
 require 'rest_client'
 require 'zenslap/repository.rb'
+require 'zenslap/app.rb'
 require 'config.rb'
 
 module Heroku::Command
@@ -31,6 +32,7 @@ module Heroku::Command
 
     def provision_plugin
       puts "---> Adding zenslap addon to #{heroku_app_name}"
+      heroku_app = ::Zenslap::Heroku::App.new(heroku_app_name)
       heroku_client.install_addon heroku_app_name, "zenslap"
 
       puts "---> Configuring for #{github_url}"
