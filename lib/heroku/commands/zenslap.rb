@@ -39,9 +39,6 @@ module Heroku::Command
       puts "---> Adding service hooks to github"
       Repository.new(github_url).add("http://zenslap.me/pushes")
 
-      puts "---> Adding test remote to local git config"
-      git_repo.add_remote "test", heroku_test_url
-
       puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."
     end    
 
