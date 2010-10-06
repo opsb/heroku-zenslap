@@ -34,7 +34,7 @@ class ZenslapTest < Test::Unit::TestCase
     setup do
       @heroku_client = mock
       @command = Heroku::Command::Zenslap.new nil
-
+      @command.stubs(:heroku_client).returns(@heroku_client = mock)
       Heroku::Client.stubs(:new).returns(@heroku_client)
       @heroku_client.stubs(:config_vars).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
       @command.stubs(:git_urls).returns([GITHUB_URL, HEROKU_URL])
@@ -56,13 +56,13 @@ class ZenslapTest < Test::Unit::TestCase
     should "retrieve ZENSLAP_ID" do
       assert_equal ZENSLAP_ID, @command.zenslap_id
     end
-    
+ 
     context "after adding zenslap service" do
       CALLBACK_URL = "http://zenslap.me/pushes"
       HEROKU_TEST_URL = "git@heroku.com:warm-sky-56.git"
 
       setup do     
-        @repo_mock = stub(:add => CALLBACK_URL, :add_deploy_key => nil)
+        @repo_mock = stub(:add => CALLBACK_URL, :add_github_access => nil)
         @git_repo = stub(:add_remote)
 
         Git.stubs(:open).returns(@git_repo)
@@ -87,7 +87,11 @@ class ZenslapTest < Test::Unit::TestCase
       end
 
       context "plugin available" do  
+        HEROKU_TEST_URL = "git@heroku.com:app123.git"
+        
         setup do
+          @heroku_client.stubs(:add_collaborator)
+          @command.stubs(:heroku_test_url).returns(HEROKU_TEST_URL)
           @command.stubs(:plugin_available?).returns(true)        
           @command.add
         end
@@ -107,14 +111,16 @@ class ZenslapTest < Test::Unit::TestCase
           assert_received @repo_mock, :add, &with(CALLBACK_URL)
         end
 
-        #should "add heroku test app to git config" do
-          #assert_received @git_repo, :add_remote do |expect|
-            #expect.with("test", HEROKU_TEST_URL)
-          #end
-        #end  
-        should "add deploy key" do
-          assert_received @repo_mock, :add_deploy_key
+        should "add github access" do
+          assert_received @repo_mock, :add_github_access
         end
+        
+        should "add heroku access" do
+          assert_received @heroku_client, :add_collaborator do |expect|
+            expect.with "app123", "admin@zenslap.me"
+          end
+        end      
+                
       end
 
     end

@@ -12,8 +12,8 @@ class RepositoryTest < Test::Unit::TestCase
                     
       stub_request(:post, "http://github.com/opsb/zenslap/edit?login=#{USERNAME}&token=#{TOKEN}")
       @repository = Repository.new "git@github.com:opsb/zenslap"
-      @github_client = mock
-      @repository.stubs(:github_client).returns(@github_client)
+      @repository.stubs(:github_client).returns(@github_client = mock)
+      @repository.stubs(:heroku_client).returns(@heroku_client = mock)
     end
     
     should "have service hooks" do
@@ -37,7 +37,7 @@ class RepositoryTest < Test::Unit::TestCase
 
     should "add zenslap as a github collaborator" do
       @github_client.stubs(:add_collaborator)
-      @repository.add_zenslap_collaborator
+      @repository.add_github_access
       assert_received @github_client, :add_collaborator do |expect|
         expect.with "opsb/zenslap", "zenslap"
       end

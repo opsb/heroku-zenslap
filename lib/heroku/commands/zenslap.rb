@@ -40,11 +40,18 @@ module Heroku::Command
       repo = Repository.new(github_url)
       repo.add("http://zenslap.me/pushes")
 
-      puts "---> Adding deploy key to github"
-      repo.add_deploy_key
+      puts "---> Adding zenslap access to #{github_url}"
+      repo.add_github_access
+      
+      puts "---> Adding zenslap access to test environment"
+      heroku_client.add_collaborator heroku_test_app_name, "admin@zenslap.me"
 
       puts "---> Zenslap is ready. Your next push to github will be tested and you will be emailed the results."
     end    
+
+    def heroku_test_app_name
+      heroku_test_url[HEROKU_GIT_REGEX, 1]
+    end
 
     def heroku_test_url
       response = RestClient.get "http://zenslap.me/heroku/resources/#{zenslap_id}.json"
