@@ -4,10 +4,11 @@ class GitTest < Test::Unit::TestCase
   context "repository" do
     HEROKU_URL= "git@heroku.com:conference_hub.git"
     GITHUB_URL = "git@github.com:opsb/conference_hub"
+    GITHUB_USER = "jimbo"
+    GITHUB_TOKEN = "df67sd6f67"
         
     setup do
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
-
       @git = Git.new
     end
     
@@ -23,7 +24,11 @@ class GitTest < Test::Unit::TestCase
       assert_equal @git.github_url, GITHUB_URL
     end
     
-    should "have github_credentials"
+    should "have github_credentials" do
+      @git.stubs(:exec).with("git config --get github.user").returns(GITHUB_USER)
+      @git.stubs(:exec).with("git config --get github.token").returns(GITHUB_TOKEN)
+      assert_equal @git.github_credentials, {:login => GITHUB_USER, :token => GITHUB_TOKEN}
+    end
 
   end
 end

@@ -15,8 +15,11 @@ class Git
   end
   
   def github_credentials
-    @global_git_config ||= File.open(File.expand_path('~/.gitconfig')).read
-    { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] }
+    { :login => exec("git config --get github.user"), :token => exec("git config --get github.token") }
+  end
+  
+  def exec(command)
+    `#{command}`
   end    
   
   def github_url

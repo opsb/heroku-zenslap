@@ -9,7 +9,6 @@ class Test::Unit::TestCase
   include WebMock
 end
 
-require 'lib/config.rb'
 require 'lib/heroku/commands/zenslap.rb'
 
 def with(*args)

@@ -6,6 +6,8 @@ class ZenslapTest < Test::Unit::TestCase
   context "add command" do
     ZENSLAP_ID = 1
     GITHUB_URL = "git@github.com:opsb/conference_hub"
+    GITHUB_LOGIN = "jimbo"
+    GITHUB_TOKEN = "df67sd6f67"    
     
     setup do
       @heroku_client = mock
@@ -17,7 +19,7 @@ class ZenslapTest < Test::Unit::TestCase
         stub(
           :heroku_app => 'conference_hub',
           :github_url => GITHUB_URL,
-          :github_credentials => { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] }
+          :github_credentials => { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN }
         )
       )
       
@@ -27,7 +29,7 @@ class ZenslapTest < Test::Unit::TestCase
       ZenslapClient.stubs(:new).returns(@zenslap_client)
       
       @github_client = mock
-      GithubClient.stubs(:new).with(GITHUB_URL, { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] } ).returns(@github_client)
+      GithubClient.stubs(:new).with(GITHUB_URL, { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN } ).returns(@github_client)
       @github_client.stubs(:add_service_hook)
       @github_client.stubs(:add_collaborator)
       
