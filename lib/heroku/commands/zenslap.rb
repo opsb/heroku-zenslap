@@ -31,9 +31,15 @@ module Heroku::Command
     end    
 
     def provision_plugin
-      puts "---> Adding zenslap addon to #{heroku_app_name}"
-      heroku_app = ::Zenslap::Heroku::App.new(heroku_app_name)
-      heroku_client.install_addon heroku_app_name, "zenslap"
+      heroku_client.install_addon heroku_app, "zenslap"
+      # ---> zenslap_client.configure zenslap_id, { :github_url => github_url }
+      # ---> github_client.add_service_hook "http://zenslap.me/pushes"
+      # ---> github_client.add_collaborator "zenslap"
+      # ---> heroku_client.add_collaborator heroku_test_app, "admin@zenslap.me"
+      
+      
+      
+
 
       puts "---> Configuring for #{github_url}"
       RestClient.put "http://zenslap.me/heroku/resources/#{zenslap_id}", :repository => { :github_url => github_url }
@@ -60,7 +66,7 @@ module Heroku::Command
       JSON.parse( response.body )["heroku_url"]    
     end
 
-    def heroku_app_name
+    def heroku_app
       heroku_url[HEROKU_GIT_REGEX, 1]
     end
 
@@ -77,7 +83,11 @@ module Heroku::Command
     end
 
     def zenslap_id
-      heroku_client.config_vars(heroku_app_name)["ZENSLAP_ID"]
+      heroku_client.config_vars(heroku_app)["ZENSLAP_ID"]
+    end
+    
+    class LocalRepo
+      
     end
 
     private

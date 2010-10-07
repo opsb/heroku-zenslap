@@ -50,7 +50,7 @@ class ZenslapTest < Test::Unit::TestCase
     end
 
     should "find heroku app name" do
-      assert_equal "conference_hub", @command.heroku_app_name
+      assert_equal "conference_hub", @command.heroku_app
     end
 
     should "retrieve ZENSLAP_ID" do
