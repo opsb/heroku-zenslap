@@ -7,7 +7,7 @@ class GitTest < Test::Unit::TestCase
         
     setup do
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
-      
+
       @git = Git.new
     end
     
@@ -15,7 +15,10 @@ class GitTest < Test::Unit::TestCase
       assert_equal @git.heroku_url, "git@heroku.com:conference_hub.git"
     end
   
-    should "have heroku_app"
+    should "have heroku_app" do
+      assert_equal @git.heroku_app, "conference_hub"
+    end
+    
     should "have github_credentials"
     should "have github_url"
   end
