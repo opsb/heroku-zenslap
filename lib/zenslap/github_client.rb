@@ -27,13 +27,16 @@ class GithubClient
   end
 
   def add_collaborator(collaborator)
-    raise "not implemented"
+    uri = "https://github.com/api/v2/yaml/repos/collaborators/#{@repository}/add/#{collaborator}?login=%s&token=%s" % [
+      CONFIG['GITHUB_LOGIN'], CONFIG['GITHUB_TOKEN']
+    ]
+    post( uri )
   end
   
-  def post(url, payload)
+  def post(url, payload = nil)
     uri = URI.parse(url)
     request = ::Net::HTTP::Post.new(uri.request_uri)
-    https = ::Net::HTTP.new(uri.host, uri.port) 
+    https = ::Net::HTTP::Proxy('localhost', '8888').new(uri.host, uri.port) 
     https.use_ssl = true
     https.start do |https|
       response = https.request request, payload

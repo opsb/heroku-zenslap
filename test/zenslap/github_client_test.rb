@@ -18,6 +18,8 @@ class GithubClientTest < Test::Unit::TestCase
       @github_client.add_service_hook "http://zenslap.me/pushes"
     end
     
-    should "add collaborator"
+    should "add collaborator" do
+      @github_client.add_collaborator "zenslap"
+    end
   end
 end
