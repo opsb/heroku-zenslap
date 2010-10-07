@@ -27,6 +27,7 @@ class ZenslapTest < Test::Unit::TestCase
       @github_client = mock
       GithubClient.stubs(:new).returns(@github_client)
       @github_client.stubs(:add_service_hook)
+      @github_client.stubs(:add_collaborator)
       
       @command = Heroku::Command::Zenslap.new nil
       
@@ -45,7 +46,9 @@ class ZenslapTest < Test::Unit::TestCase
       assert_received @github_client, :add_service_hook, &with( GITHUB_URL, "http://zenslap.me/pushes" )
     end
     
-    should "add zenslap access to github"
+    should "add zenslap access to github" do
+      assert_received @github_client, :add_collaborator, &with( "zenslap" )
+    end
     
     should "add zenslap access to heroku app"
 
