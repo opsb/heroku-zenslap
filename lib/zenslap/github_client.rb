@@ -4,26 +4,21 @@ class GithubClient
   def add_service_hook(service_hook)
     puts service_hooks
   end
-  
-  def service_hooks
-    WebMock.allow_net_connect!    
+
+  def service_hooks 
     html = open(
       "https://github.com/%s/%s/edit?login=%s&token=%s" % [
-        "opsb",
-        "conference_hub",
-        CONFIG['GITHUB_LOGIN'],
-        CONFIG['GITHUB_TOKEN']
+        "opsb", "conference_hub", CONFIG['GITHUB_LOGIN'], CONFIG['GITHUB_TOKEN']
       ]
     ).read
-    matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]/)
-    WebMock.disable_net_connect!    
+    matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]*?>/)
     matches
   end
-  
+
   def add_collaborator(collaborator)
     raise "not implemented"
   end
-  
+
 end
 
 __END__

@@ -7,6 +7,8 @@ class GithubClientTest < Test::Unit::TestCase
     end
     
     should "add service hook" do
+      stub_request(:get, "https://github.com/opsb/conference_hub/edit?login=#{CONFIG['GITHUB_LOGIN']}&token=#{CONFIG['GITHUB_TOKEN']}").
+                    to_return(:body => '<input autocomplete="off" id="urls_" name="urls[]" type="text" value="http://news.ycombinator.com">')
       @github_client.add_service_hook "http://zenslap.me/pushes"
     end
     
