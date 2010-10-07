@@ -4,7 +4,6 @@ require 'git'
 require 'nokogiri'
 require 'rest_client'
 require 'zenslap/repository.rb'
-require 'zenslap/app.rb'
 require 'zenslap/zenslap_client.rb'
 require 'zenslap/github_client.rb'
 require 'config.rb'
@@ -31,14 +30,16 @@ module Heroku::Command
       github_client.add_collaborator( "zenslap" )
     end
 
-    # def plugin_available?
-    #   heroku_client.addons.map{ |addon| addon["name"] }.find do |name| 
-    #     name =~ /zenslap.*/
-    #   end
-    # end
-
-    # def show_introduction
-    #   puts "zenslap is the easiest way to add continuous integration to your heroku app. We're currently in alpha. You can go ahead and request an invitation@zenslap.me."
-    # end
   end
+end
+
+__END__
+def plugin_available?
+  heroku_client.addons.map{ |addon| addon["name"] }.find do |name| 
+    name =~ /zenslap.*/
+  end
+end
+
+def show_introduction
+  puts "zenslap is the easiest way to add continuous integration to your heroku app. We're currently in alpha. You can go ahead and request an invitation@zenslap.me."
 end
