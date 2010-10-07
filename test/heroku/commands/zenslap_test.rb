@@ -47,7 +47,7 @@ class ZenslapTest < Test::Unit::TestCase
     end
     
     should "add service hook to github" do
-      assert_received @github_client, :add_service_hook, &with( GITHUB_URL, "http://zenslap.me/pushes" )
+      assert_received @github_client, :add_service_hook, &with( "http://zenslap.me/pushes" )
     end
     
     should "add zenslap access to github" do
