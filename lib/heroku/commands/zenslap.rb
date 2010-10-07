@@ -6,6 +6,7 @@ require 'rest_client'
 require 'zenslap/repository.rb'
 require 'zenslap/app.rb'
 require 'zenslap/zenslap_client.rb'
+require 'zenslap/github_client.rb'
 require 'config.rb'
 
 module Heroku::Command
@@ -25,6 +26,8 @@ module Heroku::Command
       zenslap_id = heroku_client.config_vars(heroku_app)["ZENSLAP_ID"]
       github_url = git_urls.find{ |git_url| git_url =~ GITHUB_REGEX }
       zenslap_client.configure( zenslap_id, { :github_url => github_url } )
+      github_client = GithubClient.new
+      github_client.add_service_hook github_url, "http://zenslap.me/pushes"
     end
 
     # def add
