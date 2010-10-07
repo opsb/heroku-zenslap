@@ -12,14 +12,18 @@ class GitTest < Test::Unit::TestCase
     end
     
     should "have heroku_url" do
-      assert_equal @git.heroku_url, "git@heroku.com:conference_hub.git"
+      assert_equal @git.heroku_url, HEROKU_URL
     end
   
     should "have heroku_app" do
       assert_equal @git.heroku_app, "conference_hub"
     end
+
+    should "have github_url" do
+      assert_equal @git.github_url, GITHUB_URL
+    end
     
     should "have github_credentials"
-    should "have github_url"
+
   end
 end
