@@ -2,6 +2,7 @@ require 'httparty'
 
 class Repository
   include HTTParty
+  http_proxy 'http://localhost', 8888
 
   def initialize(url)
     @username, @repository = /git@github.com:(\w+)\/(\w+)/.match(url)[1..2]
