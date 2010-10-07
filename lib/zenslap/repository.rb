@@ -28,7 +28,6 @@ class Repository
           "login" => CONFIG['GITHUB_LOGIN'],
           "token" => CONFIG['GITHUB_TOKEN']
       }]
-      puts params.inspect
       RestClient.post(*params)
     rescue RestClient::Exception => e
       e.response.net_http_res.code == '302'

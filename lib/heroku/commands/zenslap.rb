@@ -11,6 +11,7 @@ require 'config.rb'
 module Heroku::Command
   class Zenslap < Base
     HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/
+    GITHUB_REGEX = /github.com:\w+\/\w+/
 
     def add
       git_repo = Git.open(".")
@@ -20,6 +21,10 @@ module Heroku::Command
       heroku_credentials = Heroku::Command::Auth.new(nil).get_credentials
       heroku_client = Heroku::Client.new heroku_credentials
       heroku_client.install_addon heroku_app, "zenslap"
+      zenslap_client = ZenslapClient.new
+      zenslap_id = heroku_client.config_vars(heroku_app)["ZENSLAP_ID"]
+      github_url = git_urls.find{ |git_url| git_url =~ GITHUB_REGEX }
+      zenslap_client.configure( zenslap_id, { :github_url => github_url } )
     end
 
     # def add
