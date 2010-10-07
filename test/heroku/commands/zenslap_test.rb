@@ -43,7 +43,7 @@ class ZenslapTest < Test::Unit::TestCase
     end
     
     should "configure zenslap with github_url" do
-      assert_received @zenslap_client, :configure, &with( ZENSLAP_ID, { :github_url => GITHUB_URL } )
+      assert_received @zenslap_client, :configure, &with( ZENSLAP_ID, GITHUB_URL )
     end
     
     should "add service hook to github" do
