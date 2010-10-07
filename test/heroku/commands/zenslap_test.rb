@@ -49,8 +49,6 @@ class ZenslapTest < Test::Unit::TestCase
     should "add zenslap access to github" do
       assert_received @github_client, :add_collaborator, &with( "zenslap" )
     end
-    
-    should "add zenslap access to heroku app"
 
   end
   
