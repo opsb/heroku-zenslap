@@ -7,7 +7,7 @@ module Heroku::Command
     def add
       git_repo = Git.new
       heroku_credentials = Heroku::Command::Auth.new(nil).get_credentials
-      heroku_client = Heroku::Client.new heroku_credentials
+      heroku_client = Heroku::Client.new *heroku_credentials
       heroku_client.install_addon git_repo.heroku_app, "zenslap"
       zenslap_client = ZenslapClient.new
       zenslap_id = heroku_client.config_vars(git_repo.heroku_app)["ZENSLAP_ID"]
