@@ -14,10 +14,7 @@ class ZenslapTest < Test::Unit::TestCase
       @heroku_client.stubs( :config_vars ).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
       Heroku::Client.stubs(:new).returns(@heroku_client)
       
-      github_remote = Struct.new(:url).new(GITHUB_URL)
-      heroku_remote = Struct.new(:url).new(HEROKU_URL)
-      @git_repo = stub( :remotes => [ github_remote, heroku_remote ] )
-      Git.stubs(:open).returns(@git_repo)
+      File.stubs('open').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
       
       @zenslap_client = mock
       @zenslap_client.stubs( :add_service_hook )
