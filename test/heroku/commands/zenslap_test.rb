@@ -5,7 +5,6 @@ class ZenslapTest < Test::Unit::TestCase
 
   context "add command" do
     ZENSLAP_ID = 1
-    HEROKU_URL= "git@heroku.com:conference_hub.git"
     GITHUB_URL = "git@github.com:opsb/conference_hub"
     
     setup do
