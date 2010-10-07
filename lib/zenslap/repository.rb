@@ -26,8 +26,8 @@ class Repository
     begin
       params = ["https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
         "urls" => service_hooks + [service_hook], 
-          "login" => CONFIG['GITHUB_LOGIN'],
-          "token" => CONFIG['GITHUB_TOKEN']
+        "login" => CONFIG['GITHUB_LOGIN'],
+        "token" => CONFIG['GITHUB_TOKEN']
       }]
       RestClient.post(*params)
     rescue RestClient::Exception => e
