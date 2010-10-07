@@ -2,8 +2,10 @@ require 'test_helper'
 
 class GithubClientTest < Test::Unit::TestCase
   context "github client" do
+    GITHUB_URL = "git@github.com:opsb/conference_hub"
+    
     setup do
-      @github_client = GithubClient.new
+      @github_client = GithubClient.new(GITHUB_URL)
     end
     
     should "add service hook" do

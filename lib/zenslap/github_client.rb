@@ -2,10 +2,15 @@ require 'open-uri'
 require 'net/https'
 
 class GithubClient
+  
+  def initialize(git_url)
+    @username, @repository = /git@github.com:(\w+)\/(\w+)/.match(git_url)[1..2]
+  end
+  
   def add_service_hook(service_hook)
     all_hooks = service_hooks + [service_hook]
     form_data = all_hooks.map{ |hook| "urls[]=#{hook}" }.join("&")
-    service_hooks_url = "https://github.com/opsb/conference_hub/edit/postreceive_urls?login=%s&token=%s" % [
+    service_hooks_url = "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
       CONFIG['GITHUB_LOGIN'], CONFIG['GITHUB_TOKEN']
     ]
     WebMock.allow_net_connect!
@@ -16,7 +21,7 @@ class GithubClient
   def service_hooks 
     html = open(
       "https://github.com/%s/%s/edit?login=%s&token=%s" % [
-        "opsb", "conference_hub", CONFIG['GITHUB_LOGIN'], CONFIG['GITHUB_TOKEN']
+        @username, @repository, CONFIG['GITHUB_LOGIN'], CONFIG['GITHUB_TOKEN']
       ]
     ).read
     matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]*?>/)
@@ -30,7 +35,7 @@ class GithubClient
   def post(url, payload)
     uri = URI.parse(url)
     request = ::Net::HTTP::Post.new(uri.request_uri)
-    https = ::Net::HTTP::Proxy('localhost', '8888').new(uri.host, uri.port) 
+    https = ::Net::HTTP.new(uri.host, uri.port) 
     https.use_ssl = true
     https.start do |https|
       response = https.request request, payload
