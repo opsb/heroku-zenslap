@@ -13,9 +13,7 @@ class GithubClient
     service_hooks_url = "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
       CONFIG['GITHUB_LOGIN'], CONFIG['GITHUB_TOKEN']
     ]
-    WebMock.allow_net_connect!
     post service_hooks_url, form_data
-    WebMock.disable_net_connect!
   end
 
   def service_hooks 
