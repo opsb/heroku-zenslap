@@ -17,7 +17,7 @@ module Heroku::Command
       zenslap_client = ZenslapClient.new
       zenslap_id = heroku_client.config_vars(heroku_app)["ZENSLAP_ID"]
       zenslap_client.configure( zenslap_id, { :github_url => github_url } )
-      github_client = GithubClient.new( github_url )
+      github_client = GithubClient.new( github_url, { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] } )
       github_client.add_service_hook github_url, "http://zenslap.me/pushes"
       github_client.add_collaborator( "zenslap" )
     end

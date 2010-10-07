@@ -22,7 +22,7 @@ class ZenslapTest < Test::Unit::TestCase
       ZenslapClient.stubs(:new).returns(@zenslap_client)
       
       @github_client = mock
-      GithubClient.stubs(:new).with(GITHUB_URL).returns(@github_client)
+      GithubClient.stubs(:new).with(GITHUB_URL, { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] } ).returns(@github_client)
       @github_client.stubs(:add_service_hook)
       @github_client.stubs(:add_collaborator)
       

@@ -5,7 +5,7 @@ class GithubClientTest < Test::Unit::TestCase
     GITHUB_URL = "git@github.com:opsb/conference_hub"
     
     setup do
-      @github_client = GithubClient.new(GITHUB_URL)
+      @github_client = GithubClient.new(GITHUB_URL, { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] } )
     end
     
     should "add service hook" do
