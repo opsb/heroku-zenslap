@@ -2,36 +2,23 @@ require 'heroku/command'
 require 'heroku'
 require 'zenslap/zenslap_client.rb'
 require 'zenslap/github_client.rb'
+require 'zenslap/git.rb'
 require 'config.rb'
 
 module Heroku::Command
   class Zenslap < Base
-    HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/
-    GITHUB_REGEX = /git@github.com:.+?\b\/.+?\b/
 
     def add
-      heroku_app = heroku_url[HEROKU_GIT_REGEX, 1]
+      git_repo = Git.new
       heroku_credentials = Heroku::Command::Auth.new(nil).get_credentials
       heroku_client = Heroku::Client.new heroku_credentials
-      heroku_client.install_addon heroku_app, "zenslap"
+      heroku_client.install_addon git_repo.heroku_app, "zenslap"
       zenslap_client = ZenslapClient.new
-      zenslap_id = heroku_client.config_vars(heroku_app)["ZENSLAP_ID"]
-      zenslap_client.configure( zenslap_id, { :github_url => github_url } )
-      github_client = GithubClient.new( github_url, { :login => CONFIG['GITHUB_LOGIN'], :token => CONFIG['GITHUB_TOKEN'] } )
-      github_client.add_service_hook github_url, "http://zenslap.me/pushes"
+      zenslap_id = heroku_client.config_vars(git_repo.heroku_app)["ZENSLAP_ID"]
+      zenslap_client.configure( zenslap_id, { :github_url => git_repo.github_url } )
+      github_client = GithubClient.new( git_repo.github_url, git_repo.github_credentials )
+      github_client.add_service_hook git_repo.github_url, "http://zenslap.me/pushes"
       github_client.add_collaborator( "zenslap" )
-    end
-    
-    def github_url
-      git_config[GITHUB_REGEX]
-    end
-    
-    def heroku_url
-      git_config[HEROKU_GIT_REGEX]
-    end
-    
-    def git_config
-      @git_config ||= File.open('./.git/config').read
     end
 
   end
