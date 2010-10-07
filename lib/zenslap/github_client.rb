@@ -36,27 +36,11 @@ class GithubClient
   def post(url, payload = nil)
     uri = URI.parse(url)
     request = ::Net::HTTP::Post.new(uri.request_uri)
-    https = ::Net::HTTP::Proxy('localhost', '8888').new(uri.host, uri.port) 
+    https = ::Net::HTTP.new(uri.host, uri.port) 
     https.use_ssl = true
     https.start do |https|
       response = https.request request, payload
-      puts response.inspect
     end
   end
 
-end
-
-__END__
-
-def add(service_hook)
-  begin
-    params = ["https://github.com/#{@username}/#{@repository}/edit/postreceive_urls", {
-      "urls" => service_hooks + [service_hook], 
-        "login" => CONFIG['GITHUB_LOGIN'],
-        "token" => CONFIG['GITHUB_TOKEN']
-    }]
-    RestClient.post(*params)
-  rescue RestClient::Exception => e
-    e.response.net_http_res.code == '302'
-  end
 end
