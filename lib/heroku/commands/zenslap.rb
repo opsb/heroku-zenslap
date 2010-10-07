@@ -1,8 +1,5 @@
 require 'heroku/command'
 require 'heroku'
-require 'zenslap/zenslap_client.rb'
-require 'zenslap/github_client.rb'
-require 'zenslap/git.rb'
 
 module Heroku::Command
   class Zenslap < Base
