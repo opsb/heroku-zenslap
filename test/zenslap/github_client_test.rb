@@ -15,9 +15,21 @@ class GithubClientTest < Test::Unit::TestCase
                     to_return(:body => '<input autocomplete="off" id="urls_" name="urls[]" type="text" value="http://news.ycombinator.com">')
                     
       stub_request(:post, "https://github.com/opsb/conference_hub/edit/postreceive_urls?#{URL_ENCODED_CREDENTIALS}").
+                    with(:body => "urls[]=http://news.ycombinator.com&urls[]=http://zenslap.me/pushes").
                     to_return(:status => 302)
                     
       @github_client.add_service_hook "http://zenslap.me/pushes"
+    end
+    
+    should "not add duplicate service hooks" do
+      stub_request(:get, "https://github.com/opsb/conference_hub/edit?#{URL_ENCODED_CREDENTIALS}").
+                    to_return(:body => '<input autocomplete="off" id="urls_" name="urls[]" type="text" value="http://news.ycombinator.com">')
+                    
+      stub_request(:post, "https://github.com/opsb/conference_hub/edit/postreceive_urls?#{URL_ENCODED_CREDENTIALS}").
+                    with(:body => "urls[]=http://news.ycombinator.com").
+                    to_return(:status => 302)
+                    
+      @github_client.add_service_hook "http://news.ycombinator.com"
     end
     
     should "add collaborator" do

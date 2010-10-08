@@ -10,8 +10,7 @@ class GithubClient
   end
   
   def add_service_hook(service_hook)
-    all_hooks = service_hooks + [service_hook]
-    puts all_hooks.inspect
+    all_hooks = (service_hooks + [service_hook]).uniq
     form_data = all_hooks.map{ |hook| "urls[]=#{hook}" }.join("&")
     service_hooks_url = "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
       @auth[:login], @auth[:token]
@@ -25,8 +24,7 @@ class GithubClient
         @username, @repository, @auth[:login], @auth[:token]
       ]
     ).read
-    matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]*?>/)
-    Set.new(matches)
+    matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]*?>/).flatten
   end
 
   def add_collaborator(collaborator)
