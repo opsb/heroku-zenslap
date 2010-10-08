@@ -42,8 +42,9 @@ class GithubClient
     https.use_ssl = true
     https.start do |https|
       response = https.request request, payload
-      puts response.to_hash
-      puts response.body
+      case response 
+      when Net::HTTPClientError, Net::HTTPServerError then raise response
+      end
     end
   end
 
