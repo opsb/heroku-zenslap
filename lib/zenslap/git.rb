@@ -15,7 +15,24 @@ class Git
   end
   
   def github_credentials
-    { :login => exec("git config --get github.user").strip, :token => exec("git config --get github.token").strip }
+    { :login => retrieve_github('user'), :token => retrieve_github('token') }
+  end
+  
+  def retrieve_github(param)
+    value = exec("git config --get github.#{param}").strip
+    if value == ""
+      begin
+        value = ask_for("your github #{param}")
+        retry if value == ''
+        exec("git config --add github.#{param} #{value}")
+      end
+    end
+    value
+  end
+  
+  def ask_for(message)
+    puts "Please enter '#{message}"
+    gets
   end
   
   def exec(command)
