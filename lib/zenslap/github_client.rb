@@ -35,12 +35,15 @@ class GithubClient
   end
   
   def post(url, payload = nil)
+    puts uri
     uri = URI.parse(url)
     request = ::Net::HTTP::Post.new(uri.request_uri)
     https = ::Net::HTTP::Proxy('localhost', 8888).new(uri.host, uri.port) 
     https.use_ssl = true
     https.start do |https|
       response = https.request request, payload
+      puts response.to_hash
+      puts response.body
     end
   end
 
