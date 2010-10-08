@@ -32,7 +32,7 @@ class Git
   
   def ask_for(message)
     puts "Please enter #{message}"
-    gets
+    gets.strip
   end
   
   def exec(command)
