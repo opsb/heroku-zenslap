@@ -21,18 +21,19 @@ class Git
   def retrieve_github(param)
     value = exec("git config --get github.#{param}").strip
     if value == ""
-      begin
-        value = ask_for("your github #{param}")
-        retry if value == ''
-      end
+      value = ask_for("your github #{param}")      
       exec("git config --add github.#{param} #{value}")      
     end
     value
   end
   
   def ask_for(message)
-    puts "Please enter #{message}"
-    gets.strip
+    value = ""
+    while value == ""
+      puts "Please enter #{message}"
+      value = gets.strip
+    end
+    value
   end
   
   def exec(command)
