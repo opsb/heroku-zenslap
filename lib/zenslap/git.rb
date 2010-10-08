@@ -15,7 +15,7 @@ class Git
   end
   
   def github_credentials
-    { :login => exec("git config --get github.user"), :token => exec("git config --get github.token") }
+    { :login => exec("git config --get github.user").strip, :token => exec("git config --get github.token").strip }
   end
   
   def exec(command)

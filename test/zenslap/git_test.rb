@@ -25,8 +25,8 @@ class GitTest < Test::Unit::TestCase
     end
     
     should "have github_credentials" do
-      @git.stubs(:exec).with("git config --get github.user").returns(GITHUB_USER)
-      @git.stubs(:exec).with("git config --get github.token").returns(GITHUB_TOKEN)
+      @git.stubs(:exec).with("git config --get github.user").returns(GITHUB_USER + "\n")
+      @git.stubs(:exec).with("git config --get github.token").returns(GITHUB_TOKEN + "\n")
       assert_equal @git.github_credentials, {:login => GITHUB_USER, :token => GITHUB_TOKEN}
     end
 
