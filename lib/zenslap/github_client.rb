@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'net/https'
+require 'set'
 
 class GithubClient
   
@@ -24,7 +25,7 @@ class GithubClient
       ]
     ).read
     matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]*?>/)
-    matches
+    Set.new(matches)
   end
 
   def add_collaborator(collaborator)
