@@ -11,6 +11,7 @@ class GithubClient
   
   def add_service_hook(service_hook)
     all_hooks = service_hooks + [service_hook]
+    puts all_hooks.inspect
     form_data = all_hooks.map{ |hook| "urls[]=#{hook}" }.join("&")
     service_hooks_url = "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
       @auth[:login], @auth[:token]
