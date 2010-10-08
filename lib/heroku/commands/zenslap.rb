@@ -23,6 +23,8 @@ module Heroku::Command
       
       puts "---> Adding zenslap as github collaborator"
       github_client.add_collaborator( "zenslap" )
+      
+      puts "---> zenslap added"
     end
 
   end
