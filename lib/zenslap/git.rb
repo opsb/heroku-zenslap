@@ -24,14 +24,14 @@ class Git
       begin
         value = ask_for("your github #{param}")
         retry if value == ''
-        exec("git config --add github.#{param} #{value}")
       end
+      exec("git config --add github.#{param} #{value}")      
     end
     value
   end
   
   def ask_for(message)
-    puts "Please enter '#{message}"
+    puts "Please enter #{message}"
     gets
   end
   
