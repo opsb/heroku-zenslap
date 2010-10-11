@@ -41,6 +41,8 @@ class Git
   end    
   
   def github_url
-    git_config[GITHUB_REGEX] || raise( "No github remotes found, add one to your git config." )
+    url = git_config[GITHUB_REGEX] || raise( "No github remotes found, add one to your git config." )
+    puts "Using github address #{url}"
+    url
   end  
 end
