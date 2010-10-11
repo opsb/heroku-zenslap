@@ -42,7 +42,7 @@ class GithubClient
     https.start do |https|
       response = https.request request, payload
       case response 
-      when Net::HTTPClientError, Net::HTTPServerError then raise response
+      when Net::HTTPClientError, Net::HTTPServerError then raise response.inspect
       end
     end
   end

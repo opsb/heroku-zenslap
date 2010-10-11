@@ -10,10 +10,6 @@ class ZenslapTest < Test::Unit::TestCase
     GITHUB_TOKEN = "df67sd6f67"    
     
     setup do
-      @heroku_client = mock
-      @heroku_client.stubs( :install_addon )
-      @heroku_client.stubs( :config_vars ).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
-      Heroku::Client.stubs(:new).returns(@heroku_client)
       
       Repo.stubs(:new).returns( 
         stub(
@@ -34,6 +30,11 @@ class ZenslapTest < Test::Unit::TestCase
       @github_client.stubs(:add_collaborator)
       
       @command = Heroku::Command::Zenslap.new nil
+      
+      @heroku_client = mock
+      @heroku_client.stubs( :install_addon )
+      @heroku_client.stubs( :config_vars ).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
+      @command.stubs(:heroku).returns(@heroku_client)      
       
       @command.add
     end

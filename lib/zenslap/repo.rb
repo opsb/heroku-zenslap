@@ -2,7 +2,7 @@ require 'git'
 
 class Repo
   GITHUB_REGEX = /git@github.com:.+?\b\/.+?\b/  
-  HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/  
+  HEROKU_GIT_REGEX = /git@heroku\..*?:(.*)\.git/  
   
   def heroku_url
     find_url("---> Which heroku app do you want to add the plugin to?", HEROKU_GIT_REGEX, "No heroku remotes found. You need to add one to your git config before you can add zenslap.")

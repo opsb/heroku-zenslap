@@ -15,13 +15,10 @@ module Heroku::Command
         heroku_app = git_repo.heroku_app
         github_credentials = git_repo.github_credentials
 
-        heroku_credentials = Heroku::Command::Auth.new(nil).get_credentials
-        heroku_client = Heroku::Client.new *heroku_credentials
-
         puts "---> Installing zenslap addon"
-        heroku_client.install_addon heroku_app, "zenslap"
+        heroku.install_addon heroku_app, "zenslap"
         zenslap_client = ZenslapClient.new
-        zenslap_id = heroku_client.config_vars(heroku_app)["ZENSLAP_ID"]
+        zenslap_id = heroku.config_vars(heroku_app)["ZENSLAP_ID"]
 
         puts "---> Configuring zenslap"
         zenslap_client.configure( zenslap_id, github_url )
