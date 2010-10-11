@@ -15,7 +15,7 @@ class ZenslapTest < Test::Unit::TestCase
       @heroku_client.stubs( :config_vars ).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
       Heroku::Client.stubs(:new).returns(@heroku_client)
       
-      Git.stubs(:new).returns( 
+      Repo.stubs(:new).returns( 
         stub(
           :heroku_app => 'conference_hub',
           :github_url => GITHUB_URL,

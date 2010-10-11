@@ -1,0 +1,18 @@
+# -*- ruby -*-
+
+require 'autotest/restart'
+
+Autotest.add_hook :initialize do |at|
+  at.order = :random
+  at.add_exception 'coverage'
+  at.add_exception 'coverage.info'
+
+  %w(TestZenTest).each do |klass|
+    at.extra_class_map[klass] = "test/test_zentest.rb"
+  end
+end
+
+Autotest.add_hook :all_good do |at|
+  system "rake rcov_info"
+end if ENV['RCOV']
+

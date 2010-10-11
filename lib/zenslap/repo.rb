@@ -1,24 +1,27 @@
+require 'git'
+
 class Repo
   GITHUB_REGEX = /git@github.com:.+?\b\/.+?\b/  
   HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/  
   
   def heroku_url
-    find_url(HEROKU_GIT_REGEX, "No heroku remotes found")
+    find_url("---> Which heroku app do you want to add the plugin to?", HEROKU_GIT_REGEX, "No heroku remotes found")
   end
   
   def github_url
-    find_url(GITHUB_REGEX, "No github remotes found")
+    find_url("---> Which github repository do you want to use?", GITHUB_REGEX, "No github remotes found")
   end
   
-  def find_url(regex, message)
+  def find_url(help, regex, message)
     remotes = git_repo.remotes.select{ |r| r.url =~ regex }
     raise message if remotes.empty?
-    remotes.length == 1 ? remotes.first.url : choose_one( remotes ).url
+    remotes.length == 1 ? remotes.first.url : choose_one( help, remotes ).url
   end
   
-  def choose_one(remotes)
+  def choose_one(help, remotes)
     names = remotes.map &:name
     begin 
+      puts help
       puts names
       name = gets.chomp
     end while not names.include? name
@@ -45,7 +48,7 @@ class Repo
   def ask_for(message)
     value = ""
     while value == ""
-      puts "Please enter #{message}"
+      puts "---> Please enter #{message}"
       value = gets.strip
     end
     value

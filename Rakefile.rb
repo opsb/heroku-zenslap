@@ -24,6 +24,6 @@ end
 namespace :dependencies do
   desc "update dependencies"
   task "update" do
-    `bundle install --path vendor/bundle --without test`
+    `bundle install --path vendor/bundle`
   end
 end

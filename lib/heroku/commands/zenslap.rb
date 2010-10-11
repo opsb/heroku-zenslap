@@ -5,7 +5,7 @@ module Heroku::Command
   class Zenslap < Base
 
     def add
-      git_repo = Git.new
+      git_repo = Repo.new
       heroku_credentials = Heroku::Command::Auth.new(nil).get_credentials
       heroku_client = Heroku::Client.new *heroku_credentials
       
