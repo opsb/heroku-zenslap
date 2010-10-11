@@ -21,8 +21,8 @@ class Git
   def retrieve_github(param)
     value = exec("git config --get github.#{param}").strip
     if value == ""
-      value = ask_for("your github #{param}")      
-      exec("git config --add github.#{param} #{value}")      
+      value = ask_for("your github #{param}")
+      exec("git config --add github.#{param} #{value}")
     end
     value
   end
@@ -41,6 +41,6 @@ class Git
   end    
   
   def github_url
-    git_config[GITHUB_REGEX]
+    git_config[GITHUB_REGEX] || raise( "No github remotes found, add one to your git config." )
   end  
 end

@@ -39,7 +39,7 @@ class GitTest < Test::Unit::TestCase
       setup do
         @git.stubs(:exec).with("git config --get github.user").returns("")
         @git.stubs(:exec).with("git config --get github.token").returns("")
-        
+
         @git.stubs(:ask_for).with("your github user").returns(GITHUB_USER)
         @git.stubs(:ask_for).with("your github token").returns(GITHUB_TOKEN)
         
@@ -55,6 +55,15 @@ class GitTest < Test::Unit::TestCase
       
       should "have asked for a github token" do
         assert_received @git, :ask_for, &with("your github token")        
+      end
+    end
+    
+    context "missing github address" do
+      should "show error" do
+        @git.stubs(:git_config).returns("nothing")
+        assert_raise RuntimeError do
+          @git.github_url
+        end
       end
     end
 
