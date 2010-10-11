@@ -1,4 +1,4 @@
-class Git
+class Repo
   GITHUB_REGEX = /git@github.com:.+?\b\/.+?\b/  
   HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/  
   
@@ -41,8 +41,16 @@ class Git
   end    
   
   def github_url
-    url = git_config[GITHUB_REGEX] || raise( "No github remotes found, add one to your git config." )
-    puts "Using github address #{url}"
-    url
-  end  
+    github_remotes = git_repo.remotes.select{ |r| r.url =~ GITHUB_REGEX }
+    raise "None of the remotes point to github" if github_remotes.empty?
+    github_remotes.length == 1 ? github_remotes.first.url : choose_one( github_remotes ).url
+  end 
+  
+  def choose_one
+    raise "not implemented"
+  end
+  
+  def git_repo
+    Git.open('.')
+  end
 end
