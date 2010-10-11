@@ -1,0 +1,2 @@
+class ConsoleError < RuntimeError  
+end

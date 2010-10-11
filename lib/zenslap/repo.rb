@@ -14,7 +14,7 @@ class Repo
   
   def find_url(help, regex, message)
     remotes = git_repo.remotes.select{ |r| r.url =~ regex }
-    raise message if remotes.empty?
+    raise ConsoleError.new(message) if remotes.empty?
     remotes.length == 1 ? remotes.first.url : choose_one( help, remotes ).url
   end
   

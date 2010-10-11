@@ -11,6 +11,7 @@ class Test::Unit::TestCase
   include WebMock
 end
 
+require 'lib/zenslap/console_error.rb'
 require 'lib/zenslap/zenslap_client.rb'
 require 'lib/zenslap/github_client.rb'
 require 'lib/zenslap/repo.rb'

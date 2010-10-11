@@ -1,4 +1,5 @@
 require 'rubygems'
+require File.dirname(__FILE__) + '/lib/zenslap/console_error.rb'
 require File.dirname(__FILE__) + '/lib/zenslap/zenslap_client.rb'
 require File.dirname(__FILE__) + '/lib/zenslap/github_client.rb'
 require File.dirname(__FILE__) + '/lib/zenslap/repo.rb'

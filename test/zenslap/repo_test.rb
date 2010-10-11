@@ -67,7 +67,7 @@ class RepoTest < Test::Unit::TestCase
     context "missing github address" do
       should "show error" do
         Git.stubs( :open ).returns( stub( :remotes => [] ) )
-        assert_raise RuntimeError do
+        assert_raise ConsoleError do
           @repo.github_url
         end
       end
