@@ -13,3 +13,9 @@ class ObjectGraph
     )
   end
 end
+
+class Test::Unit::TestCase
+  def graph(hash)
+    ObjectGraph.new(hash)
+  end
+end

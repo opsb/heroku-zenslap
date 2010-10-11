@@ -9,12 +9,10 @@ class RepoTest < Test::Unit::TestCase
         
     setup do
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
-      Git.stubs(:open).returns( 
-        ObjectGraph.new( :remotes => 
-          [
-            { :name => "origin", :url => "git@github.com:opsb/conference_hub" },
-          ]
-        )
+      Git.stubs(:open).returns(
+        graph({ :remotes => 
+          [ { :name => "origin", :url => "git@github.com:opsb/conference_hub" } ] 
+        })
       )
       @repo = Repo.new
     end
