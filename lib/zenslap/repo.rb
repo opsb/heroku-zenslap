@@ -2,13 +2,23 @@ class Repo
   GITHUB_REGEX = /git@github.com:.+?\b\/.+?\b/  
   HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/  
   
-  def git_config
-    @git_config ||= File.open('./.git/config').read
+  def heroku_url
+    find_url(HEROKU_GIT_REGEX, "No heroku remotes found")
   end
   
-  def heroku_url
-    git_config[HEROKU_GIT_REGEX]
+  def github_url
+    find_url(GITHUB_REGEX, "No github remotes found")
   end
+  
+  def find_url(regex, message)
+    remotes = git_repo.remotes.select{ |r| r.url =~ regex }
+    raise message if remotes.empty?
+    remotes.length == 1 ? remotes.first.url : choose_one( remotes ).url
+  end
+  
+  def choose_one
+    raise "not implemented"
+  end  
   
   def heroku_app
     heroku_url[HEROKU_GIT_REGEX, 1]
@@ -39,16 +49,6 @@ class Repo
   def exec(command)
     `#{command}`
   end    
-  
-  def github_url
-    github_remotes = git_repo.remotes.select{ |r| r.url =~ GITHUB_REGEX }
-    raise "None of the remotes point to github" if github_remotes.empty?
-    github_remotes.length == 1 ? github_remotes.first.url : choose_one( github_remotes ).url
-  end 
-  
-  def choose_one
-    raise "not implemented"
-  end
   
   def git_repo
     Git.open('.')
