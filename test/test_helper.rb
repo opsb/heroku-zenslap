@@ -1,4 +1,6 @@
 require 'rubygems'
+require 'bundler/setup'
+Bundler.require
 require 'test/unit'
 require 'shoulda'
 require 'mocha'
@@ -9,7 +11,6 @@ class Test::Unit::TestCase
   include WebMock
 end
 
-require 'vendor/git/lib/git.rb'
 require 'lib/zenslap/zenslap_client.rb'
 require 'lib/zenslap/github_client.rb'
 require 'lib/zenslap/repo.rb'

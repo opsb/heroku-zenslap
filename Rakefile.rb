@@ -20,3 +20,10 @@ task "publish" do
   REPO = "git://github.com/opsb/heroku-zenslap"  
   `heroku plugins:push #{REPO}`
 end
+
+namespace :dependencies do
+  desc "update dependencies"
+  task "update" do
+    `bundle install --path vendor/bundle --without test`
+  end
+end
