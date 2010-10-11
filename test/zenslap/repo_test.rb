@@ -72,6 +72,29 @@ class RepoTest < Test::Unit::TestCase
         end
       end
     end
+    
+    context "with multiple heroku addresses" do
+      PRODUCTION_URL = "git@heroku.com:conferencehub-production.git"
+      STAGE_URL = "git@heroku.com:conferencehub-stage.git"
+      
+      setup do
+        Git.stubs(:open).returns(
+          graph({ :remotes => 
+            [ { :name => "production", :url => PRODUCTION_URL },
+              { :name => "stage", :url => STAGE_URL } ] 
+          })
+        )
+      end
+      
+      should "ask user to choose a remote for heroku_url" do
+        @repo.stubs(:puts)
+        @repo.stubs(:gets).returns("production\n")
+        assert_equal @repo.heroku_url, "git@heroku.com:conferencehub-production.git"
+        assert_received @repo, :puts do |expect|
+          expect.with %w{production stage}
+        end
+      end
+    end
 
   end
 end

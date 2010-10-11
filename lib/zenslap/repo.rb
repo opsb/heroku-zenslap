@@ -16,8 +16,13 @@ class Repo
     remotes.length == 1 ? remotes.first.url : choose_one( remotes ).url
   end
   
-  def choose_one
-    raise "not implemented"
+  def choose_one(remotes)
+    names = remotes.map &:name
+    begin 
+      puts names
+      name = gets.chomp
+    end while not names.include? name
+    remotes.find{ |r| r.name == name }
   end  
   
   def heroku_app
