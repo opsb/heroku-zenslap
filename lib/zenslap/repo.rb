@@ -5,11 +5,11 @@ class Repo
   HEROKU_GIT_REGEX = /git@heroku.com:(.*)\.git/  
   
   def heroku_url
-    find_url("---> Which heroku app do you want to add the plugin to?", HEROKU_GIT_REGEX, "No heroku remotes found")
+    find_url("---> Which heroku app do you want to add the plugin to?", HEROKU_GIT_REGEX, "No heroku remotes found. You need to add one to your git config before you can add zenslap.")
   end
   
   def github_url
-    find_url("---> Which github repository do you want to use?", GITHUB_REGEX, "No github remotes found")
+    find_url("---> Which github repository do you want to use?", GITHUB_REGEX, "No github remotes found. You need to add one to your git config before you can add zenslap.")
   end
   
   def find_url(help, regex, message)
