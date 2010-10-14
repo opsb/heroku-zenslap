@@ -1,6 +1,7 @@
 require 'open-uri'
 require 'net/https'
 require 'set'
+require 'octopussy'
 
 class GithubClient
   
@@ -32,6 +33,19 @@ class GithubClient
       @auth[:login], @auth[:token]
     ]
     post( uri )
+  end
+  
+  
+  def collaborators_page
+    "https://github.com/#{@username}/#{@repository}/edit#collab_bucket"
+  end
+  
+  def owner_type
+    octopussy.user(@username)[:type].downcase.to_sym
+  end  
+  
+  def octopussy
+    Octopussy::Client.new(@auth)
   end
   
   def post(url, payload = nil)

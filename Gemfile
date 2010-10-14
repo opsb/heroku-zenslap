@@ -3,6 +3,7 @@ source :rubygems
 
 gem 'heroku', '1.10.10'
 gem 'git', '1.2.5'
+gem 'opsb-octopussy', '0.3.0', :require => 'octopussy'
 
 group :test do
   gem 'shoulda'

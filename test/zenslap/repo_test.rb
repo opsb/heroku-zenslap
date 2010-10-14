@@ -29,7 +29,7 @@ class RepoTest < Test::Unit::TestCase
     should "have github_url" do
       assert_equal @repo.github_url, GITHUB_URL
     end
-    
+
     context "with stored github.user" do
       setup do
         @repo.stubs(:exec).with("git config --get github.user").returns(GITHUB_USER + "\n")

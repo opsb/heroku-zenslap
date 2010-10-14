@@ -3,7 +3,7 @@ require 'heroku'
 
 module Heroku::Command
   class Zenslap < Base
-    
+
     def display_error(message)
       puts "---! #{message}"
     end
@@ -27,15 +27,20 @@ module Heroku::Command
         puts "---> Adding github service hook"
         github_client.add_service_hook "http://zenslap.me/pushes"
 
-        puts "---> Adding zenslap as github collaborator"
-        github_client.add_collaborator( "zenslap" )
+        case github_client.owner_type
+        when :user
+          puts "---> Adding zenslap as github collaborator"
+          github_client.add_collaborator( "zenslap" )
+          puts "---> zenslap added"
+        when :organization
+          puts "---> zenslap added"
+          puts "---> Nearly there, you just need to add zenslap as a collaborator on #{github_client.collaborators_page}"
+        end
 
-        puts "---> zenslap added"
       rescue ConsoleError => e
         display_error e
       end
     end
-
   end
 end
 

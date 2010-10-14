@@ -38,5 +38,37 @@ class GithubClientTest < Test::Unit::TestCase
       
       @github_client.add_collaborator "zenslap"
     end
+    
+
+    should "have a collaborators page" do
+      assert_equal @github_client.collaborators_page, "https://github.com/opsb/conference_hub/edit#collab_bucket"
+    end
+    
+    context "for an organisation project" do
+      setup do
+        @github_client.stubs(:octopussy).returns(
+          mock('user') do
+            expects(:user).with('opsb').returns({ :type => "Organization" })
+          end
+        )
+      end
+      
+      should "have project type of 'organization'" do
+        assert_equal @github_client.owner_type, :organization
+      end
+    end
+    
+    context "for a user project" do
+      setup do
+        @github_client.stubs(:octopussy).returns(
+          stub(:user => { :type => "User" })
+        )
+      end
+      
+      should "have owner type of 'user'" do
+        assert_equal @github_client.owner_type, :user
+      end
+    end
+    
   end
 end

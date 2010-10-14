@@ -1,7 +1,7 @@
 require 'git'
 
 class Repo
-  GITHUB_REGEX = /git@github.com:.+?\b\/.+?\b/  
+  GITHUB_REGEX = /git@github.com:(.+?)\b\/(.+?)\b/  
   HEROKU_GIT_REGEX = /git@heroku\..*?:(.*)\.git/  
   
   def heroku_url

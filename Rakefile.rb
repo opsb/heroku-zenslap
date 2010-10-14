@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'rake/testtask'
 
+
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/*_test.rb'
@@ -24,6 +25,6 @@ end
 namespace :dependencies do
   desc "update dependencies"
   task "update" do
-    `bundle install --path vendor/bundle`
+    puts `bundle install --path vendor/bundle`
   end
 end
