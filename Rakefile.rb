@@ -11,7 +11,7 @@ end
 
 desc "install from github"
 task "install" do
-  REPO = "git@github.com:opsb/heroku-zenslap"
+  REPO = "file://" + `pwd`
   puts "Installing plugin from #{REPO}"
   puts `heroku plugins:install #{REPO}`
 end
