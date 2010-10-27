@@ -6,6 +6,7 @@ gem 'git', '1.2.5'
 gem 'opsb-octopussy', '0.3.0', :require => 'octopussy'
 
 group :test do
+  gem 'ruby-debug'
   gem 'shoulda'
   gem 'mocha'
   gem 'bourne'

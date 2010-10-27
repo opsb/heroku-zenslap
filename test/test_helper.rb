@@ -6,6 +6,7 @@ require 'shoulda'
 require 'mocha'
 require 'bourne'
 require 'webmock/test_unit'
+require 'ruby-debug'
 
 class Test::Unit::TestCase
   include WebMock

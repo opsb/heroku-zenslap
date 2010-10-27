@@ -18,6 +18,18 @@ class GithubClient
     ]
     post service_hooks_url, form_data
   end
+  
+  def add_team
+    params = { :team => {:name => "zenslap", :permission => "pull"}, :login => @auth[:login], :token => @auth[:token]}
+    RestClient.post("https://github.com/organizations/#{@username}/teams/create", params) do |response, request, result, &block|
+      case response.code
+      when 302
+        response
+      else
+        response.return!(request, result, &block)
+      end
+    end
+  end
 
   def service_hooks 
     html = open(

@@ -21,6 +21,13 @@ class GithubClientTest < Test::Unit::TestCase
       @github_client.add_service_hook "http://zenslap.me/pushes"
     end
     
+    should "add zenslap team to organisation" do
+      stub_request(:post, "https://github.com/organizations/opsb/teams/create").
+                    with(:body => GITHUB_CREDENTIALS.merge({:team=>{:permission=>"pull", :name=>"zenslap"}})).
+                    to_return(:status => 302)
+      @github_client.add_team
+    end
+    
     should "not add duplicate service hooks" do
       stub_request(:get, "https://github.com/opsb/conference_hub/edit?#{URL_ENCODED_CREDENTIALS}").
                     to_return(:body => '<input autocomplete="off" id="urls_" name="urls[]" type="text" value="http://news.ycombinator.com">')
