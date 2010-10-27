@@ -6,14 +6,14 @@ require 'octopussy'
 class GithubClient
   
   def initialize(git_url, auth)
-    @username, @repository = /git@github.com:(\w+)\/(\w+)/.match(git_url)[1..2]
+    @owner, @repository = /git@github.com:(\w+)\/(\w+)/.match(git_url)[1..2]
     @auth = auth
   end
   
   def add_service_hook(service_hook)
     all_hooks = (service_hooks + [service_hook]).uniq
     form_data = all_hooks.map{ |hook| "urls[]=#{hook}" }.join("&")
-    service_hooks_url = "https://github.com/#{@username}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
+    service_hooks_url = "https://github.com/#{@owner}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
       @auth[:login], @auth[:token]
     ]
     post service_hooks_url, form_data
@@ -21,7 +21,7 @@ class GithubClient
   
   def add_team
     params = { :team => {:name => "zenslap", :permission => "pull"}, :login => @auth[:login], :token => @auth[:token]}
-    RestClient.post("https://github.com/organizations/#{@username}/teams/create", params) do |response, request, result, &block|
+    RestClient.post("https://github.com/organizations/#{@owner}/teams/create", params) do |response, request, result, &block|
       case response.code
       when 302
         response
@@ -34,7 +34,7 @@ class GithubClient
   def service_hooks 
     html = open(
       "https://github.com/%s/%s/edit?login=%s&token=%s" % [
-        @username, @repository, @auth[:login], @auth[:token]
+        @owner, @repository, @auth[:login], @auth[:token]
       ]
     ).read
     matches = html.scan(/<input.*?id="urls_".*?value="(http:\/\/[^"]+)"[^>]*?>/).flatten
@@ -49,11 +49,11 @@ class GithubClient
   
   
   def collaborators_page
-    "https://github.com/#{@username}/#{@repository}/edit#collab_bucket"
+    "https://github.com/#{@owner}/#{@repository}/edit#collab_bucket"
   end
   
   def owner_type
-    octopussy.user(@username)[:type].downcase.to_sym
+    octopussy.user(@owner)[:type].downcase.to_sym
   end  
   
   def octopussy
