@@ -40,7 +40,8 @@ class GithubClientTest < Test::Unit::TestCase
     end
     
     should "add collaborator" do
-      stub_request(:post, "https://github.com/api/v2/yaml/repos/collaborators/conference_hub/add/zenslap?#{URL_ENCODED_CREDENTIALS}").
+      stub_request(:post, "https://github.com/api/v2/yaml/repos/collaborators/conference_hub/add/zenslap").
+                    with(:body => GITHUB_CREDENTIALS).
                     to_return(:status => 200)
       
       @github_client.add_collaborator "zenslap"

@@ -45,10 +45,7 @@ class GithubClient
   end
 
   def add_collaborator(collaborator)
-    uri = "https://github.com/api/v2/yaml/repos/collaborators/#{@repository}/add/#{collaborator}?login=%s&token=%s" % [
-      @auth[:login], @auth[:token]
-    ]
-    post( uri )
+    RestClient.post("https://github.com/api/v2/yaml/repos/collaborators/#{@repository}/add/#{collaborator}", {:login => @auth[:login], :token => @auth[:token]})
   end
   
   
@@ -62,19 +59,6 @@ class GithubClient
   
   def octopussy
     Octopussy::Client.new(@auth)
-  end
-  
-  def post(url, payload = nil)
-    uri = URI.parse(url)
-    request = ::Net::HTTP::Post.new(uri.request_uri)
-    https = ::Net::HTTP.new(uri.host, uri.port) 
-    https.use_ssl = true
-    https.start do |https|
-      response = https.request request, payload
-      case response 
-      when Net::HTTPClientError, Net::HTTPServerError then raise response.inspect
-      end
-    end
   end
 
 end
