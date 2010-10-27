@@ -12,11 +12,15 @@ class GithubClient
   
   def add_service_hook(service_hook)
     all_hooks = (service_hooks + [service_hook]).uniq
-    form_data = all_hooks.map{ |hook| "urls[]=#{hook}" }.join("&")
-    service_hooks_url = "https://github.com/#{@owner}/#{@repository}/edit/postreceive_urls?login=%s&token=%s" % [
-      @auth[:login], @auth[:token]
-    ]
-    post service_hooks_url, form_data
+    params = { :urls => all_hooks, :login => @auth[:login], :token => @auth[:token]}
+    RestClient.post("https://github.com/#{@owner}/#{@repository}/edit/postreceive_urls", params) do |response, request, result, &block|
+      case response.code
+      when 302
+        response
+      else
+        response.return!(request, result, &block)
+      end
+    end
   end
   
   def add_team

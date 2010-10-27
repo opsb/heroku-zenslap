@@ -14,8 +14,8 @@ class GithubClientTest < Test::Unit::TestCase
       stub_request(:get, "https://github.com/opsb/conference_hub/edit?#{URL_ENCODED_CREDENTIALS}").
                     to_return(:body => '<input autocomplete="off" id="urls_" name="urls[]" type="text" value="http://news.ycombinator.com">')
                     
-      stub_request(:post, "https://github.com/opsb/conference_hub/edit/postreceive_urls?#{URL_ENCODED_CREDENTIALS}").
-                    with(:body => "urls[]=http://news.ycombinator.com&urls[]=http://zenslap.me/pushes").
+      stub_request(:post, "https://github.com/opsb/conference_hub/edit/postreceive_urls").
+                    with(:body => GITHUB_CREDENTIALS.merge({:urls => ["http://news.ycombinator.com", "http://zenslap.me/pushes"]})).
                     to_return(:status => 302)
                     
       @github_client.add_service_hook "http://zenslap.me/pushes"
@@ -32,10 +32,10 @@ class GithubClientTest < Test::Unit::TestCase
       stub_request(:get, "https://github.com/opsb/conference_hub/edit?#{URL_ENCODED_CREDENTIALS}").
                     to_return(:body => '<input autocomplete="off" id="urls_" name="urls[]" type="text" value="http://news.ycombinator.com">')
                     
-      stub_request(:post, "https://github.com/opsb/conference_hub/edit/postreceive_urls?#{URL_ENCODED_CREDENTIALS}").
-                    with(:body => "urls[]=http://news.ycombinator.com").
+      stub_request(:post, "https://github.com/opsb/conference_hub/edit/postreceive_urls").
+                    with(:body => GITHUB_CREDENTIALS.merge({:urls => ["http://news.ycombinator.com"]})).
                     to_return(:status => 302)
-                    
+                           
       @github_client.add_service_hook "http://news.ycombinator.com"
     end
     

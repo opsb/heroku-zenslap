@@ -25,3 +25,8 @@ def with(*args)
     expect.with *args
   end
 end
+
+#Uncomment if you wish to see the requests and responses
+# WebMock.after_request do |request_signature, response|
+#   puts "Request #{request_signature} was made and #{response} was returned"
+# end
