@@ -6,7 +6,9 @@ require 'octopussy'
 class GithubClient
   
   def initialize(git_url, auth)
-    @owner, @repository = /git@github.com:(\w+)\/(\w+)/.match(git_url)[1..2]
+    search_result = /github.com[:\/](\S+)\/(\S+?)(?:\.git)?$/.match(git_url)
+    raise InvalidUrlError, git_url if search_result.blank? || search_result[1].blank? || search_result[2].blank?
+    @owner, @repository = search_result[1..2]
     @auth = auth
   end
   
