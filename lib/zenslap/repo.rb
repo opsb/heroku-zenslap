@@ -1,15 +1,15 @@
 require 'git'
 
 class Repo
-  GITHUB_REGEX = /git@github.com:(.+?)\b\/(.+?)\b/  
+  GITHUB_REGEX = /github.com[:\/](\S+)\/(\S+?)(?:\.git)?$/
   HEROKU_GIT_REGEX = /git@heroku\..*?:(.*)\.git/  
   
   def heroku_url
-    find_url("---> Which heroku app do you want to add the plugin to?", HEROKU_GIT_REGEX, "No heroku remotes found. You need to add one to your git config before you can add zenslap.")
+    @heroku_url ||= find_url("---> Which heroku app do you want to add the plugin to?", HEROKU_GIT_REGEX, "No heroku remotes found. You need to add one to your git config before you can add zenslap.")
   end
   
   def github_url
-    find_url("---> Which github repository do you want to use?", GITHUB_REGEX, "No github remotes found. You need to add one to your git config before you can add zenslap.")
+    @github_url ||= find_url("---> Which github repository do you want to use?", GITHUB_REGEX, "No github remotes found. You need to add one to your git config before you can add zenslap.")
   end
   
   def find_url(help, regex, message)
@@ -60,5 +60,21 @@ class Repo
   
   def git_repo
     Git.open('.')
+  end
+  
+  def owner
+    @owner ||= parse_github_url[0]
+  end
+  
+  def name
+    @name ||= parse_github_url[1]
+  end
+  
+  private 
+  
+  def parse_github_url
+    search_result = /github.com[:\/](\S+)\/(\S+?)(?:\.git)?$/.match(github_url)
+    raise InvalidUrlError, github_url if search_result.blank? || search_result[1].blank? || search_result[2].blank?
+    owner, name = search_result[1..2]
   end
 end

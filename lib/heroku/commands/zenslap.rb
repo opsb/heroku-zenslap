@@ -12,6 +12,8 @@ module Heroku::Command
       begin
         git_repo = Repo.new
         github_url = git_repo.github_url
+        repo_owner = git_repo.owner
+        repo_name = git_repo.name
         heroku_app = git_repo.heroku_app
         github_credentials = git_repo.github_credentials
 
@@ -21,8 +23,8 @@ module Heroku::Command
         zenslap_id = heroku.config_vars(heroku_app)["ZENSLAP_ID"]
 
         puts "---> Configuring zenslap"
-        zenslap_client.configure( zenslap_id, github_url )
-        github_client = GithubClient.new( github_url, github_credentials )
+        zenslap_client.configure( zenslap_id, repo_owner, repo_name)
+        github_client = GithubClient.new( repo_owner, repo_name, github_credentials )
 
         puts "---> Adding github service hook"
         github_client.add_service_hook "http://zenslap.me/pushes"

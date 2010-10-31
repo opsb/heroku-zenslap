@@ -3,11 +3,13 @@ require 'test_helper'
 class GithubClientTest < Test::Unit::TestCase
   context "github client" do
     GITHUB_URL = "git@github.com:opsb/conference_hub"
+    GITHUB_REPO_OWNER = "opsb"
+    GITHUB_REPO_NAME = "conference_hub"
     GITHUB_CREDENTIALS = { :login => 'jimbo', :token => 'randomhash'}
     URL_ENCODED_CREDENTIALS = GITHUB_CREDENTIALS.map{ |k,v| "#{k}=#{v}" }.join("&")
     
     setup do
-      @github_client = GithubClient.new(GITHUB_URL, GITHUB_CREDENTIALS )
+      @github_client = GithubClient.new(GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS )
     end
     
     should "add service hook" do
@@ -50,31 +52,6 @@ class GithubClientTest < Test::Unit::TestCase
 
     should "have a collaborators page" do
       assert_equal @github_client.collaborators_page, "https://github.com/opsb/conference_hub/edit#collab_bucket"
-    end
-    
-    should "accept valid github urls" do
-      begin
-      [
-        "git@github.com:opsb/conference_hub.git",
-        "https://opsb@github.com/opsb/conference_hub.git",
-        "http://github.com/bblim-ke/we-bmo-ck.git",
-        "http://github.com/bblim-ke/we.bmo.ck.git" #FIXME this is valid, need to fix the regex
-      ].each { |url| GithubClient.new(url, GITHUB_CREDENTIALS )}
-      rescue InvalidUrlError
-        flunk "url was valid but raise and InvalidUrlError"
-      end
-    end
-    
-    should "raise error on invalid github urls" do
-      [
-        "git@invalidhub.com:opsb/conference_hub.git",
-        "https://opsb@github.com/opsbconference_hub.git",
-        "http://github.com.git"
-      ].each do |url|
-          assert_raise InvalidUrlError do
-            GithubClient.new(url, GITHUB_CREDENTIALS)
-          end
-        end
     end
     
     context "for an organisation project" do

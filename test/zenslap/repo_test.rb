@@ -6,6 +6,33 @@ class RepoTest < Test::Unit::TestCase
     GITHUB_URL = "git@github.com:opsb/conference_hub"
     GITHUB_USER = "jimbo"
     GITHUB_TOKEN = "df67sd6f67"
+    
+    INVALID_GITHUB_URLS = [
+      "git@invalidhub.com:opsb/conference_hub.git",
+      "https://opsb@github.com/opsbconference_hub.git",
+      "http://github.com.git"
+    ]
+    
+    VALID_GITHUB_URLS = [
+        "git@github.com:opsb/conference_hub.git",
+        "https://opsb@github.com/opsb/conference_hub.git",
+        "http://github.com/bblim-ke/we-bmo-ck.git",
+        "http://github.com/bblim-ke/we.bmo.ck.git"
+      ]
+      
+    INVALID_HEROKU_URLS = [
+      "git@herodku.com:conference_hub.git",
+      "git@heroku.com/conference_hub.git",
+      "git@heroku.com:conference_hub.pit"
+    ]
+
+    VALID_HEROKU_URLS = [
+        "git@heroku.com:conference_hub.git",
+        "git@heroku.com:confe--ence_hub.git",
+        "git@heroku.com:confer2ence_hub.git",
+        "git@heroku.com:c.onfe.rence_hub.git",
+        "git@heroku.zenslap:conferencehub-production.git"
+      ]
         
     setup do
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
@@ -25,9 +52,53 @@ class RepoTest < Test::Unit::TestCase
     should "have heroku_app" do
       assert_equal @repo.heroku_app, "conference_hub"
     end
+    
+    should "have github owner" do
+      assert_equal @repo.owner, "opsb"
+    end
+    
+    should "have github name" do
+      assert_equal @repo.name, "conference_hub"
+    end
 
     should "have github_url" do
       assert_equal @repo.github_url, GITHUB_URL
+    end
+    
+    VALID_GITHUB_URLS.each do |url|    
+      should "accept valid github url #{url}" do
+        git_repo = stub(:remotes => [stub(:url => url)])
+        Git.stubs(:open).returns(git_repo)
+        assert_equal @repo.github_url, url
+      end
+    end
+    
+    INVALID_GITHUB_URLS.each do |url|    
+      should "not accept invalid github url #{url}" do
+        assert_raises ConsoleError do
+          git_repo = stub(:remotes => [stub(:url => url)])
+          Git.stubs(:open).returns(git_repo)
+          @repo.github_url
+        end
+      end
+    end
+    
+    VALID_HEROKU_URLS.each do |url|    
+      should "accept valid github url #{url}" do
+        git_repo = stub(:remotes => [stub(:url => url)])
+        Git.stubs(:open).returns(git_repo)
+        assert_equal @repo.heroku_url, url
+      end
+    end
+    
+    INVALID_HEROKU_URLS.each do |url|    
+      should "not accept invalid github url #{url}" do
+        assert_raises ConsoleError do
+          git_repo = stub(:remotes => [stub(:url => url)])
+          Git.stubs(:open).returns(git_repo)
+          @repo.heroku_url
+        end
+      end
     end
 
     context "with stored github.user" do

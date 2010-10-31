@@ -6,6 +6,8 @@ class ZenslapTest < Test::Unit::TestCase
   context "add command" do
     ZENSLAP_ID = 1
     GITHUB_URL = "git@github.com:opsb/conference_hub"
+    GITHUB_REPO_OWNER = "opsb"
+    GITHUB_REPO_NAME = "conference_hub"
     GITHUB_LOGIN = "jimbo"
     GITHUB_TOKEN = "df67sd6f67"    
     
@@ -13,7 +15,9 @@ class ZenslapTest < Test::Unit::TestCase
       @git_repo = stub(
         :heroku_app => 'conference_hub',
         :github_url => GITHUB_URL,
-        :github_credentials => { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN }
+        :github_credentials => { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN },
+        :owner => GITHUB_REPO_OWNER,
+        :name => GITHUB_REPO_NAME
       )
       Repo.stubs(:new).returns(@git_repo)
       
@@ -23,7 +27,7 @@ class ZenslapTest < Test::Unit::TestCase
       ZenslapClient.stubs(:new).returns(@zenslap_client)
       
       @github_client = mock
-      GithubClient.stubs(:new).with(GITHUB_URL, { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN } ).returns(@github_client)
+      GithubClient.stubs(:new).with( GITHUB_REPO_OWNER, GITHUB_REPO_NAME, { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN } ).returns(@github_client)
       @github_client.stubs(:add_service_hook)
       @github_client.stubs(:add_collaborator)
       
@@ -48,7 +52,7 @@ class ZenslapTest < Test::Unit::TestCase
       end
 
       should "configure zenslap with github_url" do
-        assert_received @zenslap_client, :configure, &with( ZENSLAP_ID, GITHUB_URL )
+        assert_received @zenslap_client, :configure, &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME )
       end
 
       should "add service hook to github" do
