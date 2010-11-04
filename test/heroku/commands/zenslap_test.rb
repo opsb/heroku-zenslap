@@ -11,6 +11,8 @@ class ZenslapTest < Test::Unit::TestCase
     GITHUB_LOGIN = "jimbo"
     GITHUB_TOKEN = "df67sd6f67"
     GITHUB_CREDENTIALS = { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN }  
+    HEROKU_EMAIL = "jim@bob.com"
+    HEROKU_PASSWORD = "password"
     
     setup do
       @git_repo = stub(
@@ -34,7 +36,7 @@ class ZenslapTest < Test::Unit::TestCase
       
       @command = Heroku::Command::Zenslap.new nil
       
-      @heroku_client = mock
+      @heroku_client = stub( :user => HEROKU_EMAIL, :password => HEROKU_PASSWORD )
       @heroku_client.stubs( :install_addon )
       @heroku_client.stubs( :config_vars ).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
       @command.stubs(:heroku).returns(@heroku_client)      
@@ -53,7 +55,8 @@ class ZenslapTest < Test::Unit::TestCase
       end
 
       should "configure zenslap with github_url" do
-        assert_received @zenslap_client, :configure, &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS)
+        assert_received @zenslap_client, :configure, 
+          &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_EMAIL, HEROKU_PASSWORD )
       end
 
       should "add service hook to github" do
