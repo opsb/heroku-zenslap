@@ -51,7 +51,7 @@ class ZenslapTest < Test::Unit::TestCase
       end
       
       should "install addon" do
-        assert_received @heroku_client, :install_addon, &with( "conference_hub", "zenslap" )
+        assert_received @heroku_client, :install_addon, &with( "conference_hub", "zenslap2" )
       end
 
       should "configure zenslap with github_url" do
