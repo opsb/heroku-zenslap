@@ -42,7 +42,6 @@ class ZenslapTest < Test::Unit::TestCase
       stubs(:add_collaborator)
       stubs(:install_addon)
       stubs(:config_vars).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
-      stubs(:uninstall_addon)
       stubs(:destroy)      
     end
     @command.stubs(:heroku).returns(@heroku)      
@@ -88,10 +87,6 @@ class ZenslapTest < Test::Unit::TestCase
     context "#destroy" do
       setup do
         @command.destroy
-      end
-
-      should "remove addon" do
-        assert_received @heroku, :uninstall_addon, &with(HEROKU_APP, ADDON_NAME)
       end
 
       should "destroy heroku app" do
