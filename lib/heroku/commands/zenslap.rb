@@ -15,6 +15,7 @@ module Heroku::Command
         heroku_app = heroku.create
         heroku.add_collaborator(heroku_app, ZENSLAP_HEROKU_USER)
         git_repo = Repo.new
+        git_repo.add_zenslap_remote(heroku_app)
         github_url = git_repo.github_url
         repo_owner = git_repo.owner
         repo_name = git_repo.name

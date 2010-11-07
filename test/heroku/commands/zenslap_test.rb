@@ -20,13 +20,15 @@ class ZenslapTest < Test::Unit::TestCase
         :github_url => GITHUB_URL,
         :github_credentials => GITHUB_CREDENTIALS,
         :owner => GITHUB_REPO_OWNER,
-        :name => GITHUB_REPO_NAME
+        :name => GITHUB_REPO_NAME,
+        :add_zenslap_remote => nil
       )
       Repo.stubs(:new).returns(@git_repo)
       
-      @zenslap_client = mock
-      @zenslap_client.stubs( :add_service_hook )
-      @zenslap_client.stubs( :configure )
+      @zenslap_client = mock do
+        stubs( :add_service_hook )
+        stubs( :configure )       
+      end
       ZenslapClient.stubs(:new).returns(@zenslap_client)
       
       @github_client = mock
@@ -53,6 +55,10 @@ class ZenslapTest < Test::Unit::TestCase
       should "create new heroku app to be used for running tests and billing" do
         assert_received @heroku_client, :create
       end      
+      
+      should "add zenslap remote" do
+        assert_received @git_repo, :add_zenslap_remote, &with( HEROKU_APP )
+      end
       
       should "add zenslap as a collaborator to heroku app" do
         assert_received @heroku_client, :add_collaborator, &with( HEROKU_APP, "admin@zenslap.me" )

@@ -27,6 +27,10 @@ class Repo
     { :login => retrieve_github('user'), :token => retrieve_github('token') }
   end
   
+  def add_zenslap_remote(name)
+    git_repo.add_remote name, "git@heroku.com:#{name}.git"
+  end
+  
   def retrieve_github(param)
     value = exec("git config --get github.#{param}").strip
     if value == ""

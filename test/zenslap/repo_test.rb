@@ -6,6 +6,7 @@ class RepoTest < Test::Unit::TestCase
     GITHUB_URL = "git@github.com:opsb/conference_hub"
     GITHUB_USER = "jimbo"
     GITHUB_TOKEN = "df67sd6f67"
+    HEROKU_APP = "conference_hub"
     
     INVALID_GITHUB_URLS = [
       "git@invalidhub.com:opsb/conference_hub.git",
@@ -22,11 +23,14 @@ class RepoTest < Test::Unit::TestCase
         
     setup do
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
-      Git.stubs(:open).returns(
-        graph({ :remotes => 
-          [ { :name => "origin", :url => "git@github.com:opsb/conference_hub" } ] 
-        })
+      @git_repo = stub(
+        :remotes => [
+          stub( :name => "origin", :url => GITHUB_URL )
+        ],
+        :add_remote => nil
       )
+      
+      Git.stubs(:open).returns(@git_repo)
       @repo = Repo.new
     end
     
@@ -40,6 +44,11 @@ class RepoTest < Test::Unit::TestCase
 
     should "have github_url" do
       assert_equal @repo.github_url, GITHUB_URL
+    end
+    
+    should "add zenslap remote" do
+      @repo.add_zenslap_remote(HEROKU_APP)
+      assert_received @git_repo, :add_remote, &with(HEROKU_APP, HEROKU_URL)
     end
     
     VALID_GITHUB_URLS.each do |url|    
