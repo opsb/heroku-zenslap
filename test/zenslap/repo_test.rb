@@ -38,15 +38,15 @@ class RepoTest < Test::Unit::TestCase
         
     setup do
       stub_git
-      @repo = Repo.new
+      @repo = GitRepo.new
     end
     
     should "have github owner" do
-      assert_equal @repo.owner, "opsb"
+      assert_equal @repo.github_owner, "opsb"
     end
     
     should "have github name" do
-      assert_equal @repo.name, "conference_hub"
+      assert_equal @repo.github_name, "conference_hub"
     end
 
     should "have github_url" do

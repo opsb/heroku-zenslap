@@ -18,12 +18,12 @@ class ZenslapTest < Test::Unit::TestCase
     @git_repo = stub do
       stubs(:github_url).returns(GITHUB_URL)
       stubs(:github_credentials).returns(GITHUB_CREDENTIALS)
-      stubs(:owner).returns(GITHUB_REPO_OWNER)
-      stubs(:name).returns(GITHUB_REPO_NAME)
+      stubs(:github_owner).returns(GITHUB_REPO_OWNER)
+      stubs(:github_name).returns(GITHUB_REPO_NAME)
       stubs(:add_zenslap_remote)
       stubs(:zenslap_app).returns(HEROKU_APP)
     end
-    Repo.stubs(:new).returns(@git_repo)
+    GitRepo.stubs(:new).returns(@git_repo)
   end
 
   def stub_zenslap

@@ -1,6 +1,6 @@
 require 'git'
 
-class Repo
+class GitRepo
   GITHUB_REGEX = /github.com[:\/](\S+)\/(\S+?)(?:\.git)?$/
   HEROKU_GIT_REGEX = /git@heroku\..*?:(.*)\.git/  
   
@@ -62,11 +62,11 @@ class Repo
     Git.open('.')
   end
   
-  def owner
+  def github_owner
     @owner ||= parse_github_url[0]
   end
   
-  def name
+  def github_name
     @name ||= parse_github_url[1]
   end
   

@@ -10,8 +10,8 @@ module Heroku::Command
       puts "---! #{message}"
     end
 
-    def git
-      @git_repo ||= Repo.new
+    def git_repo
+      @git_repo ||= GitRepo.new
     end
 
     def create
@@ -19,14 +19,14 @@ module Heroku::Command
         puts "---> Creating test environment in heroku"
         heroku_app = heroku.create
         heroku.add_collaborator(heroku_app, ZENSLAP_HEROKU_USER)
-        git.add_zenslap_remote(heroku_app)
+        git_repo.add_zenslap_remote(heroku_app)
 
         puts "---> Installing zenslap addon"
         heroku.install_addon heroku_app, ZENSLAP_ADDON
         zenslap_id = heroku.config_vars(heroku_app)["ZENSLAP_ID"]
 
         puts "---> Configuring zenslap"
-        ZenslapClient.configure( zenslap_id, git.owner, git.name, git.github_credentials, heroku_app )
+        ZenslapClient.configure( zenslap_id, git_repo.github_owner, git_repo.github_name, git_repo.github_credentials, heroku_app )
 
       rescue ConsoleError => e
         display_error e
@@ -34,7 +34,7 @@ module Heroku::Command
       
       def destroy
         puts "---> Destroying zenslap project and test environment"
-        heroku_app = Repo.new.zenslap_app
+        heroku_app = git_repo.zenslap_app
         heroku.destroy heroku_app
       rescue ConsoleError => e
         display_error e

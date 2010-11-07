@@ -14,7 +14,7 @@ end
 
 require 'lib/zenslap/console_error.rb'
 require 'lib/zenslap/zenslap_client.rb'
-require 'lib/zenslap/repo.rb'
+require 'lib/zenslap/git_repo.rb'
 require 'lib/heroku/commands/zenslap'
 require 'lib/heroku/commands/zenslap.rb'
 
