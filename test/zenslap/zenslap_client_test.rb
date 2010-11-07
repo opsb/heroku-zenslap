@@ -1,8 +1,8 @@
-require 'test_helper'
+require 'spec_helper'
 require 'net/http'
 require 'uri'
 
-class ZenslapClientTest < Test::Unit::TestCase
+describe ZenslapClient do
   
   context "zenslap client" do
     ZENSLAP_ID = 5
@@ -13,16 +13,14 @@ class ZenslapClientTest < Test::Unit::TestCase
     HEROKU_PASSWORD = "password"
     HEROKU_APP = "conference_hub_ci"
     
-    setup do
+    before do
       RestClient.stubs(:post)      
     end
     
-    should "configure the project" do
+    it "should configure the project" do
       ZenslapClient.configure ZENSLAP_ID, OWNER, NAME, GITHUB_CREDENTIALS, HEROKU_APP
-      assert_received RestClient, :post do |expect|
-        expect.with( "http://zenslap.me/projects", :project => 
-          GITHUB_CREDENTIALS.merge({ :owner => OWNER, :name => NAME, :uuid => ZENSLAP_ID, :heroku_app => HEROKU_APP } ))
-      end
+      RestClient.should have_received(:post).with( "http://zenslap.me/projects", :project => 
+        GITHUB_CREDENTIALS.merge({ :owner => OWNER, :name => NAME, :uuid => ZENSLAP_ID, :heroku_app => HEROKU_APP } ))
     end
 
   end

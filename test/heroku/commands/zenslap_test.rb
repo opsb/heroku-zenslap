@@ -1,7 +1,7 @@
-require 'test_helper.rb'
+require 'spec_helper.rb'
 require 'heroku'
 
-class ZenslapTest < Test::Unit::TestCase
+describe Heroku::Command::Zenslap do
   ZENSLAP_ID = 1
   GITHUB_URL = "git@github.com:opsb/conference_hub"
   GITHUB_REPO_OWNER = "opsb"
@@ -44,7 +44,7 @@ class ZenslapTest < Test::Unit::TestCase
   end
 
   context "zenslap" do
-    setup do
+    before do
       @command = Heroku::Command::Zenslap.new nil      
       stub_git
       stub_zenslap
@@ -53,27 +53,27 @@ class ZenslapTest < Test::Unit::TestCase
 
     context "#create" do
 
-      setup do
+      before do
         @command.create
       end
 
-      should "create new heroku app to be used for running tests and billing" do
+      it "should create new heroku app to be used for running tests and billing" do
         assert_received @heroku, :create
       end      
 
-      should "add zenslap remote" do
+      it "should add zenslap remote" do
         assert_received @git_repo, :add_zenslap_remote, &with( HEROKU_APP )
       end
 
-      should "add zenslap as a collaborator to heroku app" do
+      it "should add zenslap as a collaborator to heroku app" do
         assert_received @heroku, :add_collaborator, &with( HEROKU_APP, "admin@zenslap.me" )
       end
 
-      should "install addon" do
+      it "should install addon" do
         assert_received @heroku, :install_addon, &with( "conference_hub", ADDON_NAME )
       end
 
-      should "configure zenslap with github and heroku details" do
+      it "should configure zenslap with github and heroku details" do
         assert_received ZenslapClient, :configure, 
         &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_APP )
       end
@@ -81,11 +81,11 @@ class ZenslapTest < Test::Unit::TestCase
     end
 
     context "#destroy" do
-      setup do
+      before do
         @command.destroy
       end
 
-      should "destroy heroku app" do
+      it "should destroy heroku app" do
         assert_received @heroku, :destroy, &with(HEROKU_APP)
       end
     end
