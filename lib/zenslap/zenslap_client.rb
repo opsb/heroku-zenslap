@@ -1,6 +1,6 @@
 class ZenslapClient
   
-  def configure(uuid, repo_owner, repo_name, github_credentials, heroku_app)
+  def self.configure(uuid, repo_owner, repo_name, github_credentials, heroku_app)
     #TODO need to make https
     RestClient.post("http://zenslap.me/projects", 
       {

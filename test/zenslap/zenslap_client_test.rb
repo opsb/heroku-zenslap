@@ -15,11 +15,10 @@ class ZenslapClientTest < Test::Unit::TestCase
     
     setup do
       RestClient.stubs(:post)      
-      @zenslap_client = ZenslapClient.new
     end
     
     should "configure the project" do
-      @zenslap_client.configure ZENSLAP_ID, OWNER, NAME, GITHUB_CREDENTIALS, HEROKU_APP
+      ZenslapClient.configure ZENSLAP_ID, OWNER, NAME, GITHUB_CREDENTIALS, HEROKU_APP
       assert_received RestClient, :post do |expect|
         expect.with( "http://zenslap.me/projects", :project => 
           GITHUB_CREDENTIALS.merge({ :owner => OWNER, :name => NAME, :uuid => ZENSLAP_ID, :heroku_app => HEROKU_APP } ))

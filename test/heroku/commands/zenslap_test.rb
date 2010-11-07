@@ -27,11 +27,7 @@ class ZenslapTest < Test::Unit::TestCase
   end
 
   def stub_zenslap
-    @zenslap_client = mock do
-      stubs( :add_service_hook )
-      stubs( :configure )       
-    end
-    ZenslapClient.stubs(:new).returns(@zenslap_client)
+    ZenslapClient.stubs(:configure)
   end
 
   def stub_heroku
@@ -78,7 +74,7 @@ class ZenslapTest < Test::Unit::TestCase
       end
 
       should "configure zenslap with github and heroku details" do
-        assert_received @zenslap_client, :configure, 
+        assert_received ZenslapClient, :configure, 
         &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_APP )
       end
 
