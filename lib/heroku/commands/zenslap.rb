@@ -17,7 +17,6 @@ module Heroku::Command
         heroku.add_collaborator(heroku_app, ZENSLAP_HEROKU_USER)
         git_repo = Repo.new
         git_repo.add_zenslap_remote(heroku_app)
-        github_url = git_repo.github_url
         repo_owner = git_repo.owner
         repo_name = git_repo.name
         github_credentials = git_repo.github_credentials
@@ -29,20 +28,6 @@ module Heroku::Command
 
         puts "---> Configuring zenslap"
         zenslap_client.configure( zenslap_id, repo_owner, repo_name, github_credentials, heroku_app )
-        github_client = GithubClient.new( repo_owner, repo_name, github_credentials )
-
-        puts "---> Adding github service hook"
-        github_client.add_service_hook "http://zenslap.me/pushes"
-
-        case github_client.owner_type
-        when :user
-          puts "---> Adding zenslap as github collaborator"
-          github_client.add_collaborator( "zenslap" )
-          puts "---> zenslap added"
-        when :organization
-          puts "---> zenslap added"
-          puts "---> Nearly there, you just need to add zenslap as a collaborator on #{github_client.collaborators_page}"
-        end
 
       rescue ConsoleError => e
         display_error e
