@@ -35,7 +35,8 @@ module GitRepoSpec
           "git@github.com:opsb/conference_hub.git",
           "https://opsb@github.com/opsb/conference_hub.git",
           "http://github.com/bblim-ke/we-bmo-ck.git",
-          "http://github.com/bblim-ke/we.bmo.ck.git"
+          "http://github.com/bblim-ke/we.bmo.ck.git",
+          "git@github.com:opsb/heroku-zenslap"
         ]
 
         before do
@@ -61,10 +62,19 @@ module GitRepoSpec
         end
 
         VALID_GITHUB_URLS.each do |url|    
-          it "should accept valid github url #{url}" do
-            git_repo = stub(:remotes => [stub(:url => url)])
-            Git.stubs(:open).returns(git_repo)
-            assert_equal @git_repo.github_url, url
+          context "with remote: #{url}" do
+            before do
+              @git = stub(:remotes => [stub(:url => url)])
+              Git.stubs(:open).returns(@git)              
+            end
+            
+            it "should have valid github url" do
+              @git_repo.github_url.should == url
+            end
+            
+            it "should have valid github owner" do
+              @git_repo.github_owner.should_not be_blank
+            end
           end
         end
 
