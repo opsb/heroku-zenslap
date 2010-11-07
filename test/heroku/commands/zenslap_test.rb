@@ -13,10 +13,10 @@ class ZenslapTest < Test::Unit::TestCase
     GITHUB_CREDENTIALS = { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN }  
     HEROKU_EMAIL = "jim@bob.com"
     HEROKU_PASSWORD = "password"
+    HEROKU_APP = "conference_hub"
     
     setup do
       @git_repo = stub(
-        :heroku_app => 'conference_hub',
         :github_url => GITHUB_URL,
         :github_credentials => GITHUB_CREDENTIALS,
         :owner => GITHUB_REPO_OWNER,
@@ -36,7 +36,7 @@ class ZenslapTest < Test::Unit::TestCase
       
       @command = Heroku::Command::Zenslap.new nil
       
-      @heroku_client = stub( :user => HEROKU_EMAIL, :password => HEROKU_PASSWORD )
+      @heroku_client = stub( :user => HEROKU_EMAIL, :password => HEROKU_PASSWORD, :create => HEROKU_APP, :add_collaborator => nil )
       @heroku_client.stubs( :install_addon )
       @heroku_client.stubs( :config_vars ).returns({ "ZENSLAP_ID" => ZENSLAP_ID })
       @command.stubs(:heroku).returns(@heroku_client)      
@@ -47,7 +47,15 @@ class ZenslapTest < Test::Unit::TestCase
     context "for user project" do
       setup do
         @github_client.stubs(:owner_type).returns(:user)
-        @command.add        
+        @command.create
+      end
+      
+      should "create new heroku app to be used for running tests and billing" do
+        assert_received @heroku_client, :create
+      end      
+      
+      should "add zenslap as a collaborator to heroku app" do
+        assert_received @heroku_client, :add_collaborator, &with( HEROKU_APP, "admin@zenslap.me" )
       end
       
       should "install addon" do
@@ -56,7 +64,7 @@ class ZenslapTest < Test::Unit::TestCase
 
       should "configure zenslap with github_url" do
         assert_received @zenslap_client, :configure, 
-          &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_EMAIL, HEROKU_PASSWORD )
+          &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_APP )
       end
 
       should "add service hook to github" do
@@ -77,13 +85,13 @@ class ZenslapTest < Test::Unit::TestCase
         @github_client.stubs(:owner_type).returns(:organization)
         @github_client.stubs(:collaborators_page).returns("https://github.com/opsb/zenslap/edit#collab_bucket")
         @command.stubs(:puts)
-        @command.add        
+        @command.create
       end
       
       should "display instructions for adding zenslap collaborator" do
         assert_received @github_client, :collaborators_page
         assert_received @command, :puts do |expect|
-          expect.times(5)
+          expect.times(6)
         end
       end
     end

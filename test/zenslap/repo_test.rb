@@ -19,38 +19,15 @@ class RepoTest < Test::Unit::TestCase
         "http://github.com/bblim-ke/we-bmo-ck.git",
         "http://github.com/bblim-ke/we.bmo.ck.git"
       ]
-      
-    INVALID_HEROKU_URLS = [
-      "git@herodku.com:conference_hub.git",
-      "git@heroku.com/conference_hub.git",
-      "git@heroku.com:conference_hub.pit"
-    ]
-
-    VALID_HEROKU_URLS = [
-        "git@heroku.com:conference_hub.git",
-        "git@heroku.com:confe--ence_hub.git",
-        "git@heroku.com:confer2ence_hub.git",
-        "git@heroku.com:c.onfe.rence_hub.git",
-        "git@heroku.zenslap:conferencehub-production.git"
-      ]
         
     setup do
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
       Git.stubs(:open).returns(
         graph({ :remotes => 
-          [ { :name => "origin", :url => "git@github.com:opsb/conference_hub" },
-            { :name => "heroku", :url => "git@heroku.com:conference_hub.git" } ] 
+          [ { :name => "origin", :url => "git@github.com:opsb/conference_hub" } ] 
         })
       )
       @repo = Repo.new
-    end
-    
-    should "have heroku_url" do
-      assert_equal @repo.heroku_url, HEROKU_URL
-    end
-  
-    should "have heroku_app" do
-      assert_equal @repo.heroku_app, "conference_hub"
     end
     
     should "have github owner" do
@@ -79,24 +56,6 @@ class RepoTest < Test::Unit::TestCase
           git_repo = stub(:remotes => [stub(:url => url)])
           Git.stubs(:open).returns(git_repo)
           @repo.github_url
-        end
-      end
-    end
-    
-    VALID_HEROKU_URLS.each do |url|    
-      should "accept valid github url #{url}" do
-        git_repo = stub(:remotes => [stub(:url => url)])
-        Git.stubs(:open).returns(git_repo)
-        assert_equal @repo.heroku_url, url
-      end
-    end
-    
-    INVALID_HEROKU_URLS.each do |url|    
-      should "not accept invalid github url #{url}" do
-        assert_raises ConsoleError do
-          git_repo = stub(:remotes => [stub(:url => url)])
-          Git.stubs(:open).returns(git_repo)
-          @repo.heroku_url
         end
       end
     end
@@ -140,29 +99,6 @@ class RepoTest < Test::Unit::TestCase
         Git.stubs( :open ).returns( stub( :remotes => [] ) )
         assert_raise ConsoleError do
           @repo.github_url
-        end
-      end
-    end
-    
-    context "with multiple heroku addresses" do
-      PRODUCTION_URL = "git@heroku.zenslap:conferencehub-production.git"
-      STAGE_URL = "git@heroku.com:conferencehub-stage.git"
-      
-      setup do
-        Git.stubs(:open).returns(
-          graph({ :remotes => 
-            [ { :name => "production", :url => PRODUCTION_URL },
-              { :name => "stage", :url => STAGE_URL } ] 
-          })
-        )
-      end
-      
-      should "ask user to choose a remote for heroku_url" do
-        @repo.stubs(:puts)
-        @repo.stubs(:gets).returns("production\n")
-        assert_equal @repo.heroku_url, PRODUCTION_URL
-        assert_received @repo, :puts do |expect|
-          expect.with %w{production stage}
         end
       end
     end

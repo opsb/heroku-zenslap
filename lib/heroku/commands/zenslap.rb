@@ -3,18 +3,21 @@ require 'heroku'
 
 module Heroku::Command
   class Zenslap < Base
+    ZENSLAP_HEROKU_USER = "admin@zenslap.me"
 
     def display_error(message)
       puts "---! #{message}"
     end
 
-    def add
+    def create
       begin
+        puts "---> Creating test environment in heroku"
+        heroku_app = heroku.create
+        heroku.add_collaborator(heroku_app, ZENSLAP_HEROKU_USER)
         git_repo = Repo.new
         github_url = git_repo.github_url
         repo_owner = git_repo.owner
         repo_name = git_repo.name
-        heroku_app = git_repo.heroku_app
         github_credentials = git_repo.github_credentials
 
         puts "---> Installing zenslap addon"
@@ -23,7 +26,7 @@ module Heroku::Command
         zenslap_id = heroku.config_vars(heroku_app)["ZENSLAP_ID"]
 
         puts "---> Configuring zenslap"
-        zenslap_client.configure( zenslap_id, repo_owner, repo_name, github_credentials, heroku.user, heroku.password )
+        zenslap_client.configure( zenslap_id, repo_owner, repo_name, github_credentials, heroku_app )
         github_client = GithubClient.new( repo_owner, repo_name, github_credentials )
 
         puts "---> Adding github service hook"
