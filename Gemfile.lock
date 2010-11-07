@@ -25,6 +25,7 @@ GEM
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
     linecache (0.43)
+    method_lister (0.3.2)
     mime-types (1.16)
     mocha (0.9.8)
       rake
@@ -62,8 +63,10 @@ DEPENDENCIES
   autotest-fsevent
   autotest-growl
   bourne
+  crack
   git (= 1.2.5)
   heroku (= 1.10.10)
+  method_lister
   mocha
   opsb-octopussy (= 0.3.0)
   redgreen

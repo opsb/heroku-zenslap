@@ -1,3 +1,4 @@
+require 'crack'
 require File.dirname(__FILE__) + '/zenslap/console_error'
 require File.dirname(__FILE__) + '/zenslap/zenslap_client'
 require File.dirname(__FILE__) + '/zenslap/git_repo'

@@ -4,6 +4,7 @@ source :rubygems
 gem 'heroku', '1.10.10'
 gem 'git', '1.2.5'
 gem 'opsb-octopussy', '0.3.0', :require => 'octopussy'
+gem 'crack'
 
 group :test do
   gem 'rspec'
@@ -16,4 +17,5 @@ group :test do
   gem 'redgreen'
   gem 'autotest-growl'
   gem 'autotest-fsevent'
+  gem 'method_lister'
 end
