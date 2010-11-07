@@ -55,11 +55,6 @@ class RepoTest < Test::Unit::TestCase
       assert_received @git_repo, :add_remote, &with(HEROKU_APP, HEROKU_URL)
     end
     
-    should "add zenslap id to zenslap remote" do
-      @repo.add_zenslap_id_to_zenslap_remote(ZENSLAP_ID)
-      assert_received @git_repo, :config, &with("remote.zenslap.zenslap-id", ZENSLAP_ID)
-    end
-    
     VALID_GITHUB_URLS.each do |url|    
       should "accept valid github url #{url}" do
         git_repo = stub(:remotes => [stub(:url => url)])

@@ -26,7 +26,6 @@ module Heroku::Command
         heroku.install_addon heroku_app, ZENSLAP_ADDON
         zenslap_client = ZenslapClient.new
         zenslap_id = heroku.config_vars(heroku_app)["ZENSLAP_ID"]
-        git_repo.add_zenslap_id_to_zenslap_remote(zenslap_id)        
 
         puts "---> Configuring zenslap"
         zenslap_client.configure( zenslap_id, repo_owner, repo_name, github_credentials, heroku_app )

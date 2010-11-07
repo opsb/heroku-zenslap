@@ -32,10 +32,6 @@ class Repo
     git_repo.add_remote name, "git@heroku.com:#{name}.git"
   end
   
-  def add_zenslap_id_to_zenslap_remote(zenslap_id)
-    git_repo.config("remote.zenslap.zenslap-id", zenslap_id)
-  end
-  
   def zenslap_app
     HEROKU_GIT_REGEX.match(git_repo.remote("zenslap").url)[1]
   end

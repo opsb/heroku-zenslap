@@ -22,8 +22,7 @@ class ZenslapTest < Test::Unit::TestCase
         :github_credentials => GITHUB_CREDENTIALS,
         :owner => GITHUB_REPO_OWNER,
         :name => GITHUB_REPO_NAME,
-        :add_zenslap_remote => nil,
-        :add_zenslap_id_to_zenslap_remote => nil
+        :add_zenslap_remote => nil
       )
       Repo.stubs(:new).returns(@git_repo)
       
@@ -60,10 +59,6 @@ class ZenslapTest < Test::Unit::TestCase
       
       should "add zenslap remote" do
         assert_received @git_repo, :add_zenslap_remote, &with( HEROKU_APP )
-      end
-      
-      should "add zenslap id to zenslap remote config" do
-        assert_received @git_repo, :add_zenslap_id_to_zenslap_remote, &with(ZENSLAP_ID)
       end
       
       should "add zenslap as a collaborator to heroku app" do
