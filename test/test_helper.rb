@@ -30,3 +30,16 @@ end
 # WebMock.after_request do |request_signature, response|
 #   puts "Request #{request_signature} was made and #{response} was returned"
 # end
+
+def show_invocations
+  puts
+  puts "Invocations"
+  puts "==========="
+  puts
+  Mocha::Mockery.instance.invocations.each do |invocation|
+    puts("#{invocation.mock.inspect}.#{invocation.method_name}( %s )\n\n" % [
+      invocation.arguments.map(&:inspect).join(", ")
+    ])
+  end
+end
+
