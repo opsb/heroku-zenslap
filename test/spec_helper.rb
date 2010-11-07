@@ -7,11 +7,8 @@ require 'mocha'
 require 'bourne'
 require 'ruby-debug'
 
-require 'lib/zenslap/console_error.rb'
-require 'lib/zenslap/zenslap_client.rb'
-require 'lib/zenslap/git_repo.rb'
-require 'lib/heroku/commands/zenslap'
-require 'lib/heroku/commands/zenslap.rb'
+require File.dirname(__FILE__) + '/../lib/heroku_zenslap.rb'
+
 
 RSpec.configure do |config|
   config.mock_with :mocha
