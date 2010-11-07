@@ -34,8 +34,7 @@ module Heroku::Command
       
       def destroy
         puts "---> Destroying zenslap project and test environment"
-        heroku_app = git_repo.zenslap_app
-        heroku.destroy heroku_app
+        heroku.destroy git_repo.zenslap_app
       rescue ConsoleError => e
         display_error e
       end
