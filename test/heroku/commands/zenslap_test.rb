@@ -2,18 +2,19 @@ require 'test_helper.rb'
 require 'heroku'
 
 class ZenslapTest < Test::Unit::TestCase
+  ZENSLAP_ID = 1
+  GITHUB_URL = "git@github.com:opsb/conference_hub"
+  GITHUB_REPO_OWNER = "opsb"
+  GITHUB_REPO_NAME = "conference_hub"
+  GITHUB_LOGIN = "jimbo"
+  GITHUB_TOKEN = "df67sd6f67"
+  GITHUB_CREDENTIALS = { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN }  
+  HEROKU_EMAIL = "jim@bob.com"
+  HEROKU_PASSWORD = "password"
+  HEROKU_APP = "conference_hub"
+  ADDON_NAME = "zenslap2"
 
   context "add command" do
-    ZENSLAP_ID = 1
-    GITHUB_URL = "git@github.com:opsb/conference_hub"
-    GITHUB_REPO_OWNER = "opsb"
-    GITHUB_REPO_NAME = "conference_hub"
-    GITHUB_LOGIN = "jimbo"
-    GITHUB_TOKEN = "df67sd6f67"
-    GITHUB_CREDENTIALS = { :login => GITHUB_LOGIN, :token => GITHUB_TOKEN }  
-    HEROKU_EMAIL = "jim@bob.com"
-    HEROKU_PASSWORD = "password"
-    HEROKU_APP = "conference_hub"
     
     setup do
       @git_repo = stub(
@@ -70,7 +71,7 @@ class ZenslapTest < Test::Unit::TestCase
       end
       
       should "install addon" do
-        assert_received @heroku_client, :install_addon, &with( "conference_hub", "zenslap2" )
+        assert_received @heroku_client, :install_addon, &with( "conference_hub", ADDON_NAME )
       end
 
       should "configure zenslap with github_url" do
@@ -107,6 +108,27 @@ class ZenslapTest < Test::Unit::TestCase
       end
     end
 
+  end
+  
+  context "destroy" do
+    setup do
+      @heroku = stub(:uninstall_addon => nil, :destroy => nil)
+      
+      @git_repo = stub( :zenslap_app => HEROKU_APP )
+      Repo.stubs(:new).returns(@git_repo)
+      
+      @command = Heroku::Command::Zenslap.new nil
+      @command.stubs(:heroku).returns(@heroku)
+      @command.destroy
+    end
+    
+    should "remove addon" do
+      assert_received @heroku, :uninstall_addon, &with(HEROKU_APP, ADDON_NAME)
+    end
+    
+    should "destroy heroku app" do
+      assert_received @heroku, :destroy, &with(HEROKU_APP)
+    end
   end
   
 end

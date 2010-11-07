@@ -2,6 +2,7 @@ require 'git'
 
 class Repo
   GITHUB_REGEX = /github.com[:\/](\S+)\/(\S+?)(?:\.git)?$/
+  HEROKU_GIT_REGEX = /git@heroku\..*?:(.*)\.git/  
   
   def github_url
     @github_url ||= find_url("---> Which github repository do you want to use?", GITHUB_REGEX, "No github remotes found. You need to add one to your git config before you can add zenslap.")
@@ -33,6 +34,10 @@ class Repo
   
   def add_zenslap_id_to_zenslap_remote(zenslap_id)
     git_repo.config("remote.zenslap.zenslap-id", zenslap_id)
+  end
+  
+  def zenslap_app
+    HEROKU_GIT_REGEX.match(git_repo.remote("zenslap").url)[1]
   end
   
   def retrieve_github(param)

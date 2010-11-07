@@ -8,6 +8,8 @@ class RepoTest < Test::Unit::TestCase
     GITHUB_TOKEN = "df67sd6f67"
     HEROKU_APP = "conference_hub"
     ZENSLAP_ID = "abc"
+    ZENSLAP_APP = "conference_hub_ci"
+    ZENSLAP_GIT_REPO = "git@heroku.com:#{ZENSLAP_APP}.git"
     
     INVALID_GITHUB_URLS = [
       "git@invalidhub.com:opsb/conference_hub.git",
@@ -26,7 +28,7 @@ class RepoTest < Test::Unit::TestCase
       File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
       @git_repo = stub(
         :remotes => [
-          stub( :name => "origin", :url => GITHUB_URL )
+          stub( :name => "origin", :url => GITHUB_URL)
         ],
         :add_remote => nil,
         :config => nil
@@ -73,6 +75,13 @@ class RepoTest < Test::Unit::TestCase
           Git.stubs(:open).returns(git_repo)
           @repo.github_url
         end
+      end
+    end
+    
+    context "with zenslap remote" do
+      should "have zenslap app" do
+        @git_repo.stubs(:remote).with("zenslap").returns(stub( :name => "zenslap", :url => ZENSLAP_GIT_REPO))        
+        assert_equal @repo.zenslap_app, ZENSLAP_APP
       end
     end
 
