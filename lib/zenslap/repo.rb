@@ -31,6 +31,10 @@ class Repo
     git_repo.add_remote name, "git@heroku.com:#{name}.git"
   end
   
+  def add_zenslap_id_to_zenslap_remote(zenslap_id)
+    git_repo.config("remote.zenslap.zenslap-id", zenslap_id)
+  end
+  
   def retrieve_github(param)
     value = exec("git config --get github.#{param}").strip
     if value == ""

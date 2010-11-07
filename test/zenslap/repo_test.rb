@@ -7,6 +7,7 @@ class RepoTest < Test::Unit::TestCase
     GITHUB_USER = "jimbo"
     GITHUB_TOKEN = "df67sd6f67"
     HEROKU_APP = "conference_hub"
+    ZENSLAP_ID = "abc"
     
     INVALID_GITHUB_URLS = [
       "git@invalidhub.com:opsb/conference_hub.git",
@@ -27,7 +28,8 @@ class RepoTest < Test::Unit::TestCase
         :remotes => [
           stub( :name => "origin", :url => GITHUB_URL )
         ],
-        :add_remote => nil
+        :add_remote => nil,
+        :config => nil
       )
       
       Git.stubs(:open).returns(@git_repo)
@@ -49,6 +51,11 @@ class RepoTest < Test::Unit::TestCase
     should "add zenslap remote" do
       @repo.add_zenslap_remote(HEROKU_APP)
       assert_received @git_repo, :add_remote, &with(HEROKU_APP, HEROKU_URL)
+    end
+    
+    should "add zenslap id to zenslap remote" do
+      @repo.add_zenslap_id_to_zenslap_remote(ZENSLAP_ID)
+      assert_received @git_repo, :config, &with("remote.zenslap.zenslap-id", ZENSLAP_ID)
     end
     
     VALID_GITHUB_URLS.each do |url|    
