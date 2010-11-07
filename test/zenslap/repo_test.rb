@@ -1,6 +1,18 @@
 require 'test_helper'
 
 class RepoTest < Test::Unit::TestCase
+  def stub_git
+    @git_repo = stub(
+      :remotes => [
+        stub( :name => "origin", :url => GITHUB_URL)
+      ],
+      :add_remote => nil,
+      :config => nil
+    )
+    
+    Git.stubs(:open).returns(@git_repo)      
+  end  
+  
   context "repository" do
     HEROKU_URL= "git@heroku.com:conference_hub.git"
     GITHUB_URL = "git@github.com:opsb/conference_hub"
@@ -25,16 +37,7 @@ class RepoTest < Test::Unit::TestCase
       ]
         
     setup do
-      File.stubs(:open).with('./.git/config').returns(StringIO.new(HEROKU_URL + " " + GITHUB_URL))
-      @git_repo = stub(
-        :remotes => [
-          stub( :name => "origin", :url => GITHUB_URL)
-        ],
-        :add_remote => nil,
-        :config => nil
-      )
-      
-      Git.stubs(:open).returns(@git_repo)
+      stub_git
       @repo = Repo.new
     end
     

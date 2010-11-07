@@ -48,7 +48,7 @@ class ZenslapTest < Test::Unit::TestCase
     @command.stubs(:heroku).returns(@heroku)      
   end
 
-  context "zenslap command" do
+  context "zenslap" do
     setup do
       @command = Heroku::Command::Zenslap.new nil      
       stub_git
@@ -56,7 +56,7 @@ class ZenslapTest < Test::Unit::TestCase
       stub_heroku    
     end
 
-    context "add command" do
+    context "#create" do
 
       setup do
         @command.create
@@ -78,14 +78,14 @@ class ZenslapTest < Test::Unit::TestCase
         assert_received @heroku, :install_addon, &with( "conference_hub", ADDON_NAME )
       end
 
-      should "configure zenslap with github_url" do
+      should "configure zenslap with github and heroku details" do
         assert_received @zenslap_client, :configure, 
         &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_APP )
       end
 
     end
 
-    context "destroy" do
+    context "#destroy" do
       setup do
         @command.destroy
       end
