@@ -1,3 +1,0 @@
-[submodule "vendor/git"]
-	path = vendor/git
-	url = http://github.com/schacon/ruby-git.git
