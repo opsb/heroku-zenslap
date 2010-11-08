@@ -6,6 +6,10 @@ module Heroku::Command
     ZENSLAP_HEROKU_USER = "admin@zenslap.me"
     ZENSLAP_ADDON = "zenslap2"
 
+    def display(message)
+      puts "---> #{message}"
+    end
+
     def display_error(message)
       puts "---! #{message}"
     end
@@ -28,7 +32,11 @@ module Heroku::Command
         puts "---> Configuring zenslap"
         ZenslapClient.configure( zenslap_id, git_repo.github_owner, git_repo.github_name, git_repo.github_credentials, heroku_app )
         
-        puts "---> You're all set up. Next time you push to github everything will get tested."
+        puts "---> Nearly there, you just need to do add a couple of things on github"
+        puts "  1) Add 'zenslap' as a collaborator"
+        puts "  2) Add 'http://zenslap.me/pushes' to the service hooks"
+        puts
+        puts "---> Once you've done that you'll be ready to go"
 
       rescue ConsoleError => e
         display_error e
