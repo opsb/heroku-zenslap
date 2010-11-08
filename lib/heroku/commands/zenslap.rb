@@ -13,6 +13,12 @@ module Heroku::Command
     def display_error(message)
       puts "---! #{message}"
     end
+    
+    def display_numbered_bullets(items)
+      items.each_with_index do |item, index|
+        puts "  #{index}) #{item}"
+      end
+    end
 
     def git_repo
       @git_repo ||= GitRepo.new
@@ -20,32 +26,38 @@ module Heroku::Command
 
     def create
       begin
-        puts "---> Creating test environment in heroku"
+        if git_repo.remote_exists? 'zenslap'
+          display_error "Zenslap has already been set up"
+          return
+        end
+        
+        display "Creating test environment in heroku"
         heroku_app = heroku.create
         heroku.add_collaborator(heroku_app, ZENSLAP_HEROKU_USER)
         git_repo.add_zenslap_remote(heroku_app)
 
-        puts "---> Installing zenslap addon"
+        display "Installing zenslap addon"
         heroku.install_addon heroku_app, ZENSLAP_ADDON
         zenslap_id = heroku.config_vars(heroku_app)["ZENSLAP_ID"]
 
-        puts "---> Configuring zenslap"
+        display "Configuring zenslap"
         ZenslapClient.configure( zenslap_id, git_repo.github_owner, git_repo.github_name, git_repo.github_credentials, heroku_app )
         
-        puts "---> Nearly there, you just need to do add a couple of things on github"
-        puts "  1) Add 'zenslap' as a collaborator"
-        puts "  2) Add 'http://zenslap.me/pushes' to the service hooks"
-        puts
-        puts "---> Once you've done that you'll be ready to go"
+        display "Nearly there, you just need to do add a couple of things on github"
+        display_numbered_bullets [
+          "Add 'zenslap' as a collaborator",
+          "Add 'http://zenslap.me/pushes' to the service hooks"
+        ]
+        display "Once you've done that you'll be ready to go"
 
       rescue ConsoleError => e
         display_error e
       end
       
       def destroy
-        puts "---> Destroying zenslap project and test environment"
+        display "Destroying zenslap project and test environment"
         heroku.destroy git_repo.zenslap_app
-        puts "---> All done. Thanks for using zenslap."
+        display "All done. Thanks for using zenslap."
       rescue ConsoleError => e
         display_error e
       end

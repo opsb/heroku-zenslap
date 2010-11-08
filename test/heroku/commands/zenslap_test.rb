@@ -48,38 +48,53 @@ module ZenslapSpec
     context "zenslap" do
       before do
         @command = Heroku::Command::Zenslap.new nil      
+        @command.stubs(:display_error)
+        @command.stubs(:display)
+        @command.stubs(:display_numbered_bullets)
         stub_git
         stub_zenslap
         stub_heroku    
       end
 
       context "#create" do
-
-        before do
-          @command.create
+        context "when zenslap has already been created" do
+          before do
+            @git_repo.stubs(:remote_exists?).with("zenslap").returns(true)
+            @command.create
+          end
+                    
+          it "should display message saying zenslap has already been created" do
+            @command.should have_received(:display_error).with("Zenslap has already been set up")
+          end
         end
+        
+        context "before zenslap has been created" do
+          before do
+            @git_repo.stubs(:remote_exists?).with("zenslap").returns(false)            
+            @command.create
+          end
 
-        it "should create new heroku app to be used for running tests and billing" do
-          assert_received @heroku, :create
-        end      
+          it "should create new heroku app to be used for running tests and billing" do
+            assert_received @heroku, :create
+          end      
 
-        it "should add zenslap remote" do
-          assert_received @git_repo, :add_zenslap_remote, &with( HEROKU_APP )
+          it "should add zenslap remote" do
+            assert_received @git_repo, :add_zenslap_remote, &with( HEROKU_APP )
+          end
+
+          it "should add zenslap as a collaborator to heroku app" do
+            assert_received @heroku, :add_collaborator, &with( HEROKU_APP, "admin@zenslap.me" )
+          end
+
+          it "should install addon" do
+            assert_received @heroku, :install_addon, &with( "conference_hub", ADDON_NAME )
+          end
+
+          it "should configure zenslap with github and heroku details" do
+            assert_received ZenslapClient, :configure, 
+            &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_APP )
+          end          
         end
-
-        it "should add zenslap as a collaborator to heroku app" do
-          assert_received @heroku, :add_collaborator, &with( HEROKU_APP, "admin@zenslap.me" )
-        end
-
-        it "should install addon" do
-          assert_received @heroku, :install_addon, &with( "conference_hub", ADDON_NAME )
-        end
-
-        it "should configure zenslap with github and heroku details" do
-          assert_received ZenslapClient, :configure, 
-          &with( ZENSLAP_ID, GITHUB_REPO_OWNER, GITHUB_REPO_NAME, GITHUB_CREDENTIALS, HEROKU_APP )
-        end
-
       end
 
       context "#destroy" do

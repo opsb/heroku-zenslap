@@ -55,10 +55,18 @@ module GitRepoSpec
         it "should have github_url" do
           assert_equal @git_repo.github_url, GITHUB_URL
         end
+        
+        it "should know if a remote exists" do
+          @git_repo.remote_exists?('origin').should be_true
+        end
+        
+        it "should know if a remote does not exist" do
+          @git_repo.remote_exists?('non existent remote').should be_false          
+        end
 
         it "should add zenslap remote" do
           @git_repo.add_zenslap_remote(HEROKU_APP)
-          @git.should have_received(:add_remote).with(HEROKU_APP, HEROKU_URL)
+          @git.should have_received(:add_remote).with("zenslap", HEROKU_URL)
         end
 
         VALID_GITHUB_URLS.each do |url|    

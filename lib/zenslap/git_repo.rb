@@ -9,7 +9,7 @@ class GitRepo
   end
   
   def find_url(help, regex, message)
-    remotes = git_repo.remotes.select{ |r| r.url =~ regex }
+    remotes = git.remotes.select{ |r| r.url =~ regex }
     raise ConsoleError.new(message) if remotes.empty?
     remotes.length == 1 ? remotes.first.url : choose_one( help, remotes ).url
   end
@@ -29,11 +29,15 @@ class GitRepo
   end
   
   def add_zenslap_remote(name)
-    git_repo.add_remote name, "git@heroku.com:#{name}.git"
+    git.add_remote "zenslap", "git@heroku.com:#{name}.git"
   end
   
   def zenslap_app
-    HEROKU_GIT_REGEX.match(git_repo.remote("zenslap").url)[1]
+    HEROKU_GIT_REGEX.match(git.remote("zenslap").url)[1]
+  end
+  
+  def remote_exists?(name)
+    !!git.remotes.find{|r|r.name == name}
   end
   
   def retrieve_github(param)
@@ -58,7 +62,7 @@ class GitRepo
     `#{command}`
   end    
   
-  def git_repo
+  def git
     Git.open('.')
   end
   
