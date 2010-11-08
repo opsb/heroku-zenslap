@@ -27,6 +27,8 @@ module Heroku::Command
 
         puts "---> Configuring zenslap"
         ZenslapClient.configure( zenslap_id, git_repo.github_owner, git_repo.github_name, git_repo.github_credentials, heroku_app )
+        
+        puts "---> You're all set up. Next time you push to github everything will get tested."
 
       rescue ConsoleError => e
         display_error e
@@ -35,6 +37,7 @@ module Heroku::Command
       def destroy
         puts "---> Destroying zenslap project and test environment"
         heroku.destroy git_repo.zenslap_app
+        puts "---> All done. Thanks for using zenslap."
       rescue ConsoleError => e
         display_error e
       end
