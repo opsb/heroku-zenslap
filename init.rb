@@ -1,3 +1,3 @@
 require 'rubygems'
 
-require 'lib/heroku_zenslap'
+require File.dirname(__FILE__) + '/lib/heroku_zenslap'
