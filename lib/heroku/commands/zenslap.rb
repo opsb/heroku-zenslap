@@ -43,24 +43,24 @@ module Heroku::Command
         display "Configuring zenslap"
         ZenslapClient.configure( zenslap_id, git_repo.github_owner, git_repo.github_name, git_repo.github_credentials, heroku_app )
         
-        display "Nearly there, you just need to do add a couple of things on github"
+        display ""
+        display "Nearly there, you just need to do add a couple of things on github and you'll be ready to go"
         display_numbered_bullets [
           "Add 'zenslap' as a collaborator",
           "Add 'http://zenslap.me/pushes' to the service hooks"
         ]
-        display "Once you've done that you'll be ready to go"
 
       rescue ConsoleError => e
         display_error e
       end
-      
-      def destroy
-        display "Destroying zenslap project and test environment"
-        heroku.destroy git_repo.zenslap_app
-        display "All done. Thanks for using zenslap."
-      rescue ConsoleError => e
-        display_error e
-      end
     end
+    
+    def destroy
+      display "Destroying zenslap project and test environment"
+      heroku.destroy git_repo.zenslap_app
+      display "All done. Thanks for using zenslap."
+    rescue ConsoleError => e
+      display_error e
+    end    
   end
 end
