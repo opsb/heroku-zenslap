@@ -1,8 +1,7 @@
-require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:default, :test)
+Bundler.require(:test)
 require 'test/unit'
 require 'shoulda'
+require 'rspec'
 require 'mocha'
 require 'bourne'
 require 'ruby-debug'
